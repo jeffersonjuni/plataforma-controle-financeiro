@@ -1,0 +1,40 @@
+.sidebar {
+  width: 220px;
+  min-height: 100vh;
+  background: var(--color-text);
+  color: var(--color-text2);;
+  padding: 1rem;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 1rem 0;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.sidebar li:hover {
+  color: var(--color-hoverButtonText);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .sidebar ul {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .sidebar li {
+    margin: 0;
+  }
+}

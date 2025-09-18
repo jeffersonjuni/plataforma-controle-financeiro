@@ -1,0 +1,29 @@
+:root {
+  --color-primary: #1e293b;
+  --color-secondary: #334155;
+  --color-accent: #16a34a;
+  --color-danger: #dc2626;
+  --color-warning: #f59e0b;
+  --color-background: #f9fafb;
+  --color-text: #111827;
+  --color-text2: #f9fafb;
+  --color-lgpdAlert: #facc15;
+  --color-hoverButtonText: #38bdf8;  
+
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+
+
+
+
+
+
+
+
