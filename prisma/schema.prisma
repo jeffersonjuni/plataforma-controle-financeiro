@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+enum AccountType {
+  CORRENTE
+  POUPANCA
+  INVESTIMENTO
+}
+
+enum TransactionType {
+  ENTRADA
+  SAIDA
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  accounts  Account[]
+}
+
+model Account {
+  id          Int          @id @default(autoincrement())
+  name        String
+  type        AccountType
+  balance     Float        @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  userId      Int
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  transactions Transaction[]
+
+  @@index([userId])
+}
+
+model Transaction {
+  id          Int             @id @default(autoincrement())
+  description String
+  amount      Float
+  type        TransactionType
+  date        DateTime        @default(now())
+
+  accountId   Int
+  account     Account         @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([accountId])
+}
+
+
+
