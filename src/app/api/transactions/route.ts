@@ -1,28 +1,61 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createTransaction, listTransactions } from "@/lib/services/transactionService";
+import { createTransaction, listTransactions, checkAccountOwnership } from "@/lib/services/transactionService";
+import { requireAuth } from "@/lib/middlewares";
+
+// Tipo de usuário retornado pelo requireAuth
+interface AuthUser {
+  userId: number;
+  email?: string;
+}
 
 export async function GET(req: NextRequest) {
-  const accountId = Number(req.nextUrl.searchParams.get("accountId"));
-  if (!accountId) return NextResponse.json({ error: "accountId obrigatório" }, { status: 400 });
-
   try {
+    const user: AuthUser = requireAuth(req);
+
+    const accountIdParam = req.nextUrl.searchParams.get("accountId");
+    if (!accountIdParam) {
+      return NextResponse.json({ error: "accountId is required" }, { status: 400 });
+    }
+
+    const accountId = Number(accountIdParam);
+    if (isNaN(accountId)) {
+      return NextResponse.json({ error: "accountId must be a number" }, { status: 400 });
+    }
+
+    // Verifica se a conta pertence ao usuário
+    const isOwned = await checkAccountOwnership(accountId, user.userId);
+    if (!isOwned) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     const transactions = await listTransactions(accountId);
     return NextResponse.json(transactions);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message ?? "Unauthorized" }, { status: 401 });
   }
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const { accountId, description, amount, type } = await req.json();
+    const user: AuthUser = requireAuth(req);
+
+    const body = await req.json();
+    const { accountId, description, amount, type } = body;
+
     if (!accountId || !description || !amount || !type) {
-      return NextResponse.json({ error: "Campos obrigatórios faltando" }, { status: 400 });
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const newTransaction = await createTransaction(accountId, description, amount, type);
-    return NextResponse.json(newTransaction);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
+    const numericAmount = Number(amount);
+    if (isNaN(numericAmount)) {
+      return NextResponse.json({ error: "Amount must be a number" }, { status: 400 });
+    }
+
+    // Verifica se a conta pertence ao usuário
+    const isOwned = await checkAccountOwnership(accountId, user.userId);
+    if (!isOwned) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const transaction = await createTransaction(accountId, description, numericAmount, type);
+    return NextResponse.json(transaction, { status: 201 });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message ?? "Error creating transaction" }, { status: 400 });
   }
 }
