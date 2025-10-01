@@ -1,61 +1,80 @@
-import { NextRequest, NextResponse } from "next/server";
-import { createTransaction, listTransactions, checkAccountOwnership } from "@/lib/services/transactionService";
-import { requireAuth } from "@/lib/middlewares";
+import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+import { verifyToken } from "@/lib/authService";
 
-// Tipo de usuário retornado pelo requireAuth
-interface AuthUser {
-  userId: number;
-  email?: string;
-}
-
-export async function GET(req: NextRequest) {
+export async function GET(req: Request) {
   try {
-    const user: AuthUser = requireAuth(req);
-
-    const accountIdParam = req.nextUrl.searchParams.get("accountId");
-    if (!accountIdParam) {
-      return NextResponse.json({ error: "accountId is required" }, { status: 400 });
+    const token = req.headers.get("authorization")?.split(" ")[1];
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const accountId = Number(accountIdParam);
-    if (isNaN(accountId)) {
-      return NextResponse.json({ error: "accountId must be a number" }, { status: 400 });
+    const decoded = verifyToken(token);
+    if (!decoded?.userId) {
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
-    // Verifica se a conta pertence ao usuário
-    const isOwned = await checkAccountOwnership(accountId, user.userId);
-    if (!isOwned) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Buscar todas as transações do usuário autenticado
+    const transactions = await prisma.transaction.findMany({
+      where: {
+        account: {
+          userId: decoded.userId,
+        },
+      },
+      include: { account: true },
+      orderBy: { date: "desc" },
+    });
 
-    const transactions = await listTransactions(accountId);
     return NextResponse.json(transactions);
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message ?? "Unauthorized" }, { status: 401 });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json(
+      { error: "Erro ao listar transações" },
+      { status: 500 }
+    );
   }
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
-    const user: AuthUser = requireAuth(req);
-
-    const body = await req.json();
-    const { accountId, description, amount, type } = body;
+    const { accountId, description, amount, type, date, category } =
+      await req.json();
 
     if (!accountId || !description || !amount || !type) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Campos obrigatórios faltando" },
+        { status: 400 }
+      );
     }
 
-    const numericAmount = Number(amount);
-    if (isNaN(numericAmount)) {
-      return NextResponse.json({ error: "Amount must be a number" }, { status: 400 });
-    }
+    const transaction = await prisma.transaction.create({
+      data: {
+        accountId,
+        description,
+        amount,
+        type,
+        category: category ?? "VARIAVEL", // default se não mandar
+        date: date ? new Date(date) : undefined, // usa a enviada ou default do Prisma
+      },
+    });
 
-    // Verifica se a conta pertence ao usuário
-    const isOwned = await checkAccountOwnership(accountId, user.userId);
-    if (!isOwned) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Atualizar saldo da conta
+    await prisma.account.update({
+      where: { id: accountId },
+      data: {
+        balance:
+          type === "ENTRADA"
+            ? { increment: amount }
+            : { decrement: amount },
+      },
+    });
 
-    const transaction = await createTransaction(accountId, description, numericAmount, type);
     return NextResponse.json(transaction, { status: 201 });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message ?? "Error creating transaction" }, { status: 400 });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json(
+      { error: "Erro ao criar transação" },
+      { status: 500 }
+    );
   }
 }

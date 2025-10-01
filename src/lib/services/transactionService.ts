@@ -7,7 +7,8 @@ export async function createTransaction(
   accountId: number,
   description: string,
   amount: number,
-  type: "ENTRADA" | "SAIDA" // Melhor tipagem para evitar erros de string
+  type: "ENTRADA" | "SAIDA",
+  date?: string 
 ) {
   const account = await prisma.account.findUnique({ where: { id: accountId } });
   if (!account) throw new Error("Conta não encontrada");
@@ -18,6 +19,7 @@ export async function createTransaction(
       amount,
       type,
       accountId,
+      date: date ? new Date(date) : undefined, // respeita data enviada
     },
   });
 

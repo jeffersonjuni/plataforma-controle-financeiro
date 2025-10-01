@@ -1,21 +1,42 @@
-import prisma from "@/lib/prisma";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { signToken, verifyToken } from "./jwt";
+import prisma from "./prisma";
 
+const JWT_SECRET = process.env.JWT_SECRET || "secret_key";
+
+// Criar token
+export function generateToken(userId: number) {
+  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: "7d" });
+}
+
+// Verificar token
+export function verifyToken(token: string) {
+  try {
+    return jwt.verify(token, JWT_SECRET) as { userId: number };
+  } catch {
+    return null;
+  }
+}
+
+// Login
 export async function loginUser(email: string, password: string) {
   const user = await prisma.user.findUnique({ where: { email } });
-  if (!user) throw new Error("Credenciais inválidas");
+  if (!user) throw new Error("Usuário não encontrado");
 
-  const isValid = await bcrypt.compare(password, user.password);
-  if (!isValid) throw new Error("Credenciais inválidas");
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isPasswordValid) throw new Error("Senha inválida");
 
-  // payload mínimo (LGPD): não colocar dados sensíveis
-  const token = signToken({ userId: user.id, email: user.email });
+  const token = generateToken(user.id);
   return { token, user: { id: user.id, name: user.name, email: user.email } };
 }
 
-export function getUserFromToken(token: string) {
-  const payload = verifyToken(token) as any;
-  // payload contém userId e email (se usamos signToken acima)
-  return { userId: payload.userId, email: payload.email };
+// Pegar usuário a partir do token
+export async function getUserFromToken(token: string) {
+  const payload = verifyToken(token);
+  if (!payload) return null;
+
+  const user = await prisma.user.findUnique({ where: { id: payload.userId } });
+  if (!user) return null;
+
+  return { id: user.id, name: user.name, email: user.email };
 }

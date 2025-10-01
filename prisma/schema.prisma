@@ -19,6 +19,11 @@ enum TransactionType {
   SAIDA
 }
 
+enum TransactionCategory {
+  FIXA
+  VARIAVEL
+}
+
 model User {
   id        Int       @id @default(autoincrement())
   name      String
@@ -47,17 +52,20 @@ model Account {
 }
 
 model Transaction {
-  id          Int             @id @default(autoincrement())
+  id          Int                 @id @default(autoincrement())
   description String
   amount      Float
   type        TransactionType
-  date        DateTime        @default(now())
+  date        DateTime?            @default(now())
+  category    TransactionCategory @default(VARIAVEL)
 
   accountId   Int
-  account     Account         @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  account     Account             @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   @@index([accountId])
 }
+
+
 
 
 
