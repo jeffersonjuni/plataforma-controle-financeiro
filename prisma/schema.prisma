@@ -24,6 +24,13 @@ enum TransactionCategory {
   VARIAVEL
 }
 
+enum LogLevel {
+  INFO
+  WARN
+  ERROR
+  AUDIT
+}
+
 model User {
   id        Int       @id @default(autoincrement())
   name      String
@@ -63,6 +70,17 @@ model Transaction {
   account     Account             @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   @@index([accountId])
+}
+
+model Log {
+  id        Int      @id @default(autoincrement())
+  level     LogLevel @default(INFO)
+  message   String
+  meta      Json?
+  userId    Int?     // opcional — vincular ao usuário se houver
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }
 
 
