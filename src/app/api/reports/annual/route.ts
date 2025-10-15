@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { verifyToken } from "@/lib/authService";
-import { getCategoryReport } from "@/lib/services/reports/categoryReport";
+import { getAnnualReport } from "@/lib/services/reports/annualReport";
 
 export async function GET(req: Request) {
   try {
@@ -15,21 +15,17 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Token inválido" }, { status: 401 });
     }
 
-    const url = new URL(req.url);
-    const month = Number(url.searchParams.get("month"));
-    const year = Number(url.searchParams.get("year"));
+    const { searchParams } = new URL(req.url);
+    const yearParam = searchParams.get("year");
+    const year = yearParam ? Number(yearParam) : new Date().getFullYear();
 
-    if (!month || !year) {
-      return NextResponse.json({ error: "Mês e ano são obrigatórios" }, { status: 400 });
-    }
+    const report = await getAnnualReport(decoded.userId, year);
 
-    const data = await getCategoryReport(decoded.userId, month, year);
-
-    return NextResponse.json(data);
-  } catch (err: any) {
-    console.error("Erro category-expenses:", err);
+    return NextResponse.json(report);
+  } catch (error) {
+    console.error(error);
     return NextResponse.json(
-      { error: err.message || "Erro interno" },
+      { error: "Erro ao gerar relatório anual" },
       { status: 500 }
     );
   }

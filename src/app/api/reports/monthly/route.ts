@@ -1,39 +1,33 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import { verifyToken } from "@/lib/authService";
+import { getMonthlyReport } from "@/lib/services/reports/monthlyReport";
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
+  try {
+    const token = req.headers.get("authorization")?.split(" ")[1];
+    if (!token) {
+      return NextResponse.json({ error: "Token não fornecido" }, { status: 401 });
+    }
 
-  const monthParam = searchParams.get("month");
-  const yearParam = searchParams.get("year");
+    const decoded = verifyToken(token);
+    if (!decoded?.userId) {
+      return NextResponse.json({ error: "Token inválido" }, { status: 403 });
+    }
 
-  const month = monthParam ? Number(monthParam) : new Date().getMonth() + 1;
-  const year = yearParam ? Number(yearParam) : new Date().getFullYear();
+    const { searchParams } = new URL(req.url);
+    const monthParam = searchParams.get("month");
+    const yearParam = searchParams.get("year");
 
-  const transactions = await prisma.transaction.findMany({
-    where: {
-      date: {
-        gte: new Date(year, month - 1, 1),
-        lt: new Date(year, month, 1),
-      },
-    },
-  });
+    const month = monthParam ? Number(monthParam) : new Date().getMonth() + 1;
+    const year = yearParam ? Number(yearParam) : new Date().getFullYear();
 
-  const monthlyReport = transactions.reduce((acc, t) => {
-    const monthName = new Date(t.date).toLocaleString("default", { month: "long" });
-    if (!acc[monthName]) acc[monthName] = { income: 0, expense: 0, balance: 0 };
-
-    if (t.type === "ENTRADA") acc[monthName].income += t.amount;
-    else if (t.type === "SAIDA") acc[monthName].expense += t.amount;
-
-    acc[monthName].balance = acc[monthName].income - acc[monthName].expense;
-    return acc;
-  }, {} as Record<string, { income: number; expense: number; balance: number }>);
-
-  const formattedReport = Object.entries(monthlyReport).map(([month, values]) => ({
-    month,
-    ...values,
-  }));
-
-  return NextResponse.json(formattedReport);
+    const report = await getMonthlyReport(decoded.userId, month, year);
+    return NextResponse.json(report);
+  } catch (error) {
+    console.error("Erro ao gerar relatório mensal:", error);
+    return NextResponse.json(
+      { error: "Erro interno ao gerar o relatório mensal" },
+      { status: 500 }
+    );
+  }
 }
