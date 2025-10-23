@@ -6,182 +6,70 @@ import { getCategoryReport } from "@/lib/services/reports/categoryReport";
 import { exportToCSV } from "@/lib/services/reports/exportReports/exportCSV";
 import { exportToExcel } from "@/lib/services/reports/exportReports/exportExcel";
 
-/**
- * Tipos
- */
-type TransactionReport = {
-  date: Date | null;
-  account: string;
-  category: string;
-  type: string;
-  amount: number;
-  balanceAccumulated: number;
-  year?: number;
-};
-
-type ValidatedParams = {
-  reportType: "monthly" | "annual" | "category";
-  format: "csv" | "excel";
-  year: number | null;
-  month: number | null;
-  startMonth: number | null;
-  endMonth: number | null;
-};
-
-/**
- * Helpers de parsing / validação
- */
-function parseStringParam(value: string | null) {
-  if (!value) return null;
-  const v = value.trim().toLowerCase();
-  return v === "" ? null : v;
-}
-
-function parseNumberParam(value: string | null) {
-  if (!value) return null;
-  const n = Number(value);
-  return Number.isFinite(n) ? n : null;
-}
-
-function clampMonth(n: number | null) {
-  if (n === null) return null;
-  if (n < 1) return 1;
-  if (n > 12) return 12;
-  return Math.floor(n);
-}
-
-/**
- * Valida e normaliza todos os query params usados pela rota
- */
-function validateAndNormalizeParams(url: URL): { ok: true; params: ValidatedParams } | { ok: false; error: string } {
-  const rawType = parseStringParam(url.searchParams.get("type"));
-  const rawFormat = parseStringParam(url.searchParams.get("format"));
-  const rawYear = parseNumberParam(url.searchParams.get("year"));
-  const rawMonth = parseNumberParam(url.searchParams.get("month"));
-  const rawStartMonth = parseNumberParam(url.searchParams.get("startMonth"));
-  const rawEndMonth = parseNumberParam(url.searchParams.get("endMonth"));
-
-  if (!rawType) return { ok: false, error: "Parâmetro 'type' obrigatório (monthly | annual | category)." };
-  if (!["monthly", "annual", "category"].includes(rawType))
-    return { ok: false, error: "Parâmetro 'type' inválido. Use: monthly, annual ou category." };
-
-  if (!rawFormat) return { ok: false, error: "Parâmetro 'format' obrigatório (csv | excel)." };
-  if (!["csv", "excel"].includes(rawFormat))
-    return { ok: false, error: "Parâmetro 'format' inválido. Use: csv ou excel." };
-
-  const year = rawYear ?? null;
-  const month = clampMonth(rawMonth);
-  const startMonth = clampMonth(rawStartMonth ?? null);
-  const endMonth = clampMonth(rawEndMonth ?? null);
-
-  // Regras por tipo
-  if (rawType === "monthly") {
-    if (!year) return { ok: false, error: "Relatório 'monthly' requer parâmetro 'year'." };
-    // se start/end fornecidos, validar lógica
-    if (startMonth !== null && endMonth !== null && startMonth > endMonth)
-      return { ok: false, error: "'startMonth' não pode ser maior que 'endMonth'." };
-  }
-
-  if (rawType === "category") {
-    if (!year || month === null) return { ok: false, error: "Relatório 'category' requer 'month' e 'year'." };
-  }
-
-  // tudo ok
-  return {
-    ok: true,
-    params: {
-      reportType: rawType as "monthly" | "annual" | "category",
-      format: rawFormat as "csv" | "excel",
-      year,
-      month,
-      startMonth,
-      endMonth,
-    },
-  };
-}
-
-/**
- * Rota GET /api/reports/export
- */
 export async function GET(req: Request) {
   try {
-    // Autenticação
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader) return NextResponse.json({ error: "Token ausente" }, { status: 401 });
-    const token = authHeader.replace("Bearer ", "").trim();
+    // Autenticação: token via Authorization ou cookie
+    let token = req.headers.get("authorization")?.replace("Bearer ", "").trim();
+    if (!token) {
+      const cookie = req.headers.get("cookie");
+      const match = cookie?.match(/token=([^;]+)/);
+      token = match?.[1];
+    }
+    if (!token) return NextResponse.json({ error: "Token ausente" }, { status: 401 });
+
     const decoded = verifyToken(token);
     if (!decoded?.userId) return NextResponse.json({ error: "Token inválido" }, { status: 401 });
 
-    // Validar e normalizar query params
+    // Validar query params
     const url = new URL(req.url);
-    const validate = validateAndNormalizeParams(url);
-    if (!validate.ok) {
-      return NextResponse.json({ error: validate.error }, { status: 400 });
-    }
-    const { reportType, format, year, month, startMonth, endMonth } = validate.params;
+    const reportType = (url.searchParams.get("type") ?? "").trim() as
+      | "monthly"
+      | "annual"
+      | "category";
+    const format = (url.searchParams.get("format") ?? "").trim() as "csv" | "excel";
+    const year = Number(url.searchParams.get("year") ?? 0) || null;
+    const month = Number(url.searchParams.get("month") ?? 0) || null;
+    const startMonth = Number(url.searchParams.get("startMonth") ?? 0) || null;
+    const endMonth = Number(url.searchParams.get("endMonth") ?? 0) || null;
 
-    // Preparar dados a exportar
-    let data: TransactionReport[] = [];
+    if (!reportType || !["monthly", "annual", "category"].includes(reportType))
+      return NextResponse.json({ error: "Parâmetro 'type' inválido" }, { status: 400 });
+    if (!format || !["csv", "excel"].includes(format))
+      return NextResponse.json({ error: "Parâmetro 'format' inválido" }, { status: 400 });
 
+    if (reportType === "monthly" && startMonth !== null && endMonth !== null && startMonth > endMonth)
+      return NextResponse.json(
+        { error: "'startMonth' não pode ser maior que 'endMonth'." },
+        { status: 400 }
+      );
+
+    // Gerar dados do relatório
+    let data: any[] = [];
     if (reportType === "monthly") {
-      // garantir ano
-      const y = year as number;
       const s = startMonth ?? month ?? 1;
       const e = endMonth ?? month ?? 12;
       for (let m = s; m <= e; m++) {
-        const report = await getMonthlyReport(decoded.userId, m, y);
-        // garantir shape TransactionReport (os services devem retornar esse shape)
-        data.push(
-          ...report.map((t) => ({
-            date: t.date ?? null,
-            account: t.account ?? "",
-            category: t.category ?? "",
-            type: t.type ?? "",
-            amount: Number(t.amount ?? 0),
-            balanceAccumulated: Number(t.balanceAccumulated ?? 0),
-            year: y,
-          }))
-        );
+        const report = await getMonthlyReport(decoded.userId, m, year!);
+        data.push(...report);
       }
     } else if (reportType === "annual") {
-      const startY = year ?? 2023;
-      const endY = year ?? new Date().getFullYear();
-      for (let y = startY; y <= endY; y++) {
-        const report = await getAnnualReport(decoded.userId, y);
-        data.push(
-          ...report.map((t) => ({
-            date: t.date ?? null,
-            account: t.account ?? "",
-            category: t.category ?? "",
-            type: t.type ?? "",
-            amount: Number(t.amount ?? 0),
-            balanceAccumulated: Number(t.balanceAccumulated ?? 0),
-            year: y,
-          }))
-        );
-      }
+      const y = year ?? new Date().getFullYear();
+      const report = await getAnnualReport(decoded.userId, y);
+      data.push(...report);
     } else if (reportType === "category") {
-      const y = year as number;
-      const m = month as number;
-      const categoryData = await getCategoryReport(decoded.userId, m, y); // retorna {category, amount}[]
-      // mapear para TransactionReport com placeholders
-      data = categoryData.map((c) => ({
-        date: null,
-        account: "",
-        category: c.category,
-        type: "SAIDA",
-        amount: Number(c.amount ?? 0),
-        balanceAccumulated: 0,
-        year: y,
-      }));
+      if (!month || !year) return NextResponse.json({ error: "Month e year obrigatórios" }, { status: 400 });
+      const report = await getCategoryReport(decoded.userId, month, year);
+      data.push(...report);
     }
 
     // Se não há dados, retornar mensagem amigável
-    if (!data.length) {
-      return NextResponse.json({ message: "Nenhum dado para exportação com os filtros informados." }, { status: 204 });
-    }
+    if (!data.length)
+      return NextResponse.json(
+        { message: "Nenhum dado para exportação com os filtros informados." },
+        { status: 200 }
+      );
 
-    // Exportar
+    // Exportar CSV
     if (format === "csv") {
       const csv = exportToCSV(data);
       return new NextResponse(csv, {
@@ -193,9 +81,8 @@ export async function GET(req: Request) {
       });
     }
 
-    // excel
+    // Exportar Excel
     const buffer = exportToExcel(data, reportType);
-    // next server espera BodyInit; usar Uint8Array para Buffer
     return new NextResponse(new Uint8Array(buffer), {
       status: 200,
       headers: {

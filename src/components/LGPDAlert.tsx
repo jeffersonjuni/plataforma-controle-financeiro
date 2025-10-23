@@ -1,19 +1,26 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../styles/lgpd.css";
 
 export default function LGPDAlert() {
-  const [visible, setVisible] = useState(true);
+  const [show, setShow] = useState(false);
 
-  if (!visible) return null;
+  useEffect(() => {
+    const accepted = localStorage.getItem("lgpdAccepted");
+    if (!accepted) setShow(true);
+  }, []);
+
+  function handleAccept() {
+    localStorage.setItem("lgpdAccepted", "true");
+    setShow(false);
+  }
+
+  if (!show) return null;
 
   return (
     <div className="lgpd-alert">
-      <p>
-         Este sistema protege suas informações em conformidade com a{" "}
-        <strong>LGPD</strong>.
-      </p>
-      <button onClick={() => setVisible(false)}>Entendi</button>
+      <p>Este site utiliza cookies para melhorar sua experiência.</p>
+      <button onClick={handleAccept}>Entendi</button>
     </div>
   );
 }

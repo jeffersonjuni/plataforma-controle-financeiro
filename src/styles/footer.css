@@ -2,8 +2,11 @@
   text-align: center;
   padding: 1rem;
   background: var(--color-primary);
-  color: var(--color-text2);
   font-size: 0.9rem;
+}
+
+.footer p {
+  color: var(--color-text2) !important;
 }
 
 @media (max-width: 768px) {
