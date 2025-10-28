@@ -70,3 +70,23 @@ nav a:hover, nav button:hover {
   overflow: hidden;
   text-overflow: ellipsis; 
 }
+
+.username-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  margin-bottom: 1rem;
+  transition: 0.2s ease-in-out;
+}
+
+.username-link:hover .username-text {
+  background-color: var(--color-secondary);
+  color: var(--color-accent);
+}
+
+.username-icon img {
+  width: 24px;     
+  height: 24px;
+  object-fit: contain;
+  display: block;
+}

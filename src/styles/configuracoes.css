@@ -1,0 +1,228 @@
+.config-container {
+  padding: 3rem 4rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  background: var(--color-background);
+  min-height: calc(100vh - 4rem);
+}
+
+.config-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+.config-header h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.back-btn {
+  background: var(--color-danger);
+  color: var(--color-text2);
+  padding: 0.85rem 1.8rem;
+  font-weight: 600;
+  border-radius: var(--radius-medium);
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  opacity: 0.85;
+}
+
+/* ===== SEÇÕES COMO CARDS MAIS GRANDES ===== */
+.config-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2.5rem;
+}
+
+.config-card {
+  background: var(--color-surface);
+  padding: 2.5rem;
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow-medium);
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.config-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-large);
+}
+
+.config-card h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  color: var(--color-primary);
+}
+
+.config-card label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+  width: 100%;
+  padding: 0.85rem 1.2rem;
+  font-size: 1.05rem;
+  border-radius: var(--radius-medium);
+  border: 1px solid #cbd5e1;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.2);
+}
+
+/* ===== CATEGORIAS ESTILIZADAS ===== */
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.category-item {
+  background: var(--color-secondary);
+  color: var(--color-text2);
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-medium);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.category-item:hover {
+  opacity: 0.85;
+}
+
+.add-category {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.add-category input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+}
+
+/* ===== BOTÕES ===== */
+.config-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.save-btn {
+  background: var(--color-accent);
+  color: var(--color-text2);
+  padding: 0.85rem 1.8rem;
+  font-weight: 600;
+  border-radius: var(--radius-medium);
+  transition: all 0.2s ease;
+}
+
+.save-btn:hover {
+  opacity: 0.85;
+}
+
+.discard-btn {
+  background: var(--color-danger);
+  color: var(--color-text2);
+  padding: 0.85rem 1.8rem;
+  font-weight: 600;
+  border-radius: var(--radius-medium);
+  transition: all 0.2s ease;
+}
+
+.discard-btn:hover {
+  opacity: 0.85;
+}
+
+/* ===== DICAS DE SENHA ===== */
+.password-tips {
+  list-style: none;
+  padding: 1rem;
+  margin-top: 0.5rem;
+  background: var(--color-surface);
+  border: 1px solid #cbd5e1;
+  border-radius: var(--radius-medium);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.password-tips li {
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.password-tips li::before {
+  content: "❌"; /* ícone padrão */
+  display: inline-block;
+  width: 1.2rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+.password-tips li.valid::before {
+  content: "✅"; /* substitui o X pelo check */
+  color: green;
+}
+
+.password-tips li.valid {
+  color: green;
+}
+
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 1400px) {
+  .config-container {
+    padding: 2.5rem 3rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .config-sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .config-container {
+    padding: 1.8rem 2rem;
+  }
+
+  .config-actions {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .back-btn,
+  .save-btn,
+  .discard-btn {
+    width: 100%;
+    text-align: center;
+  }
+}

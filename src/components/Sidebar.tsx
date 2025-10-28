@@ -16,10 +16,18 @@ export default function Sidebar({ onLogout }: { onLogout: () => void }) {
 
   return (
     <aside className="sidebar">
-      <p className="username">
-        <span className="username-icon">👤</span>
-        <span className="username-text">{username}</span>
-      </p>
+      <a href="/configuracoes" className="username-link">
+        <p className="username">
+          <span className="username-icon">
+            <img
+              src="/icons/user-icon.png"
+              alt="Usuário"
+            />
+          </span>
+          <span className="username-text">{username}</span>
+        </p>
+      </a>
+
       <nav>
         <ul>
           <li>

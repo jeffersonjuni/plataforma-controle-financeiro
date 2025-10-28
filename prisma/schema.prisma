@@ -32,14 +32,17 @@ enum LogLevel {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  name      String
-  email     String    @unique
-  password  String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id             Int      @id @default(autoincrement())
+  name           String
+  email          String   @unique
+  password       String
+  notifications  Boolean  @default(true)
+  defaultExport  String   @default("csv")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  accounts  Account[]
+  accounts       Account[]
+  categories     Category[]
 }
 
 model Account {
@@ -83,6 +86,14 @@ model Log {
   @@index([userId])
 }
 
+model Category {
+  id     Int    @id @default(autoincrement())
+  name   String
+  userId Int
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
 
 
 
