@@ -110,31 +110,64 @@
   transform: translateY(-2px);
 }
 
-/* ===== FILTROS ===== */
+/* === FILTROS DE CONTA, MÊS E ANO (PADRÃO PROJETO) === */
 .filters {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
   flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .filters label {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--color-secondary);
-  font-weight: 500;
+  flex-direction: column;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  font-weight: 600;
 }
 
-.filters select,
-.filters input {
-  padding: 0.45rem 0.7rem;
-  border: 1px solid var(--color-secondary);
+.filters select {
+  margin-top: 0.4rem;
+  background-color: #f9fafb;
+  border: 1px solid #cbd5e1;
   border-radius: 8px;
-  background: white;
+  padding: 0.55rem 0.75rem;
   color: var(--color-text);
   font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  min-width: 160px;
 }
+
+.filters select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  background-color: #ffffff;
+}
+
+.filters option {
+  background-color: #ffffff;
+  color: var(--color-text);
+}
+
+/* === MODO RESPONSIVO === */
+@media (max-width: 768px) {
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filters select {
+    width: 100%;
+  }
+}
+
 
 /* ===== TABELA ===== */
 .transactions-table {
@@ -174,6 +207,41 @@
   color: var(--color-danger);
   font-weight: 600;
 }
+
+.transactions-table .actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.edit-btn,
+.delete-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.edit-btn:hover {
+  color: #007bff;
+  transform: scale(1.1);
+}
+
+.delete-btn:hover {
+  color: #e63946;
+  transform: scale(1.1);
+}
+
+.error {
+  color: #e63946;
+  font-weight: 500;
+}
+
+.loading {
+  color: #aaa;
+}
+
 
 /* ===== MENSAGENS ===== */
 .loading {

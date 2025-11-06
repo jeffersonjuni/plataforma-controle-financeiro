@@ -17,13 +17,28 @@
   align-items: center;
 }
 
+.filters select {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  background: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.filters select:hover {
+  border-color: #2196f3;
+}
+
 .cards {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
 }
 
-@media(min-width: 768px) {
+
+@media (min-width: 768px) {
   .cards {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -33,13 +48,19 @@
   background-color: white;
   padding: 1rem;
   border-radius: 1rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-.card.green { color: #4caf50; }
-.card.red { color: #f44336; }
-.card.blue { color: #2196f3; }
+.card.green {
+  color: #4caf50;
+}
+.card.red {
+  color: #f44336;
+}
+.card.blue {
+  color: #2196f3;
+}
 
 .charts {
   display: flex;
@@ -51,7 +72,7 @@
   background-color: white;
   padding: 1rem;
   border-radius: 1rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .tooltip {

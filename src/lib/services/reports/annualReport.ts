@@ -1,22 +1,26 @@
 import prisma from "@/lib/prisma";
 
-export async function getAnnualReport(userId: number, year: number) {
-  // Busca todas as transações do usuário no ano
-  const transactions = await prisma.transaction.findMany({
-    where: {
-      account: { userId },
-      date: {
-        gte: new Date(year, 0, 1),
-        lt: new Date(year + 1, 0, 1),
-      },
+export async function getAnnualReport(userId: number, year: number, accountId?: number) {
+  const where: any = {
+    account: { userId },
+    date: {
+      gte: new Date(year, 0, 1),
+      lt: new Date(year + 1, 0, 1),
     },
-    include: { account: true }, // pegar nome/tipo da conta
-    orderBy: { date: "asc" },   // importante para saldo acumulado
+  };
+
+  if (accountId) {
+    where.accountId = accountId;
+  }
+
+  const transactions = await prisma.transaction.findMany({
+    where,
+    include: { account: true },
+    orderBy: { date: "asc" },
   });
 
   let balanceAccum = 0;
 
-  // Mapeia cada transação com saldo acumulado e informações detalhadas
   const detailedReport = transactions.map((t) => {
     if (t.type === "ENTRADA") balanceAccum += t.amount;
     else if (t.type === "SAIDA") balanceAccum -= t.amount;

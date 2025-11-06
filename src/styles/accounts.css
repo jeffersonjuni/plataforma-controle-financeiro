@@ -1,0 +1,192 @@
+.accounts-container {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ===== TÍTULO ===== */
+.accounts-header {
+  color: var(--color-primary);
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: left;
+  margin-bottom: 0.5rem;
+}
+
+/* ===== FORMULÁRIO ===== */
+.account-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  background-color: white;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.account-form input,
+.account-form select {
+  flex: 1;
+  min-width: 160px;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease;
+  background-color: white;
+  color: var(--color-text);
+}
+
+.account-form input:focus,
+.account-form select:focus {
+  border-color: var(--color-primary);
+  outline: none;
+}
+
+.account-form button {
+  background-color: var(--color-accent);
+  color: var(--color-text2);
+  border: none;
+  padding: 0.6rem 1.4rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.account-form button:hover {
+  background-color: #15803d;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.account-form button:active::after {
+  content: "";
+  position: absolute;
+  width: 120%;
+  height: 120%;
+  background: rgba(255, 255, 255, 0.2);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 50%;
+  animation: ripple 0.4s ease-out forwards;
+}
+
+/* ===== TABELA ===== */
+.accounts-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.accounts-table th {
+  background-color: var(--color-primary);
+  color: var(--color-text2);
+  text-align: left;
+  padding: 0.75rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.accounts-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.95rem;
+}
+
+.accounts-table tr:hover {
+  background-color: #f8fafc;
+}
+
+/* ===== BOTÕES DE AÇÃO ===== */
+.delete-btn {
+  background: var(--color-danger);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.2s ease;
+}
+
+.delete-btn:hover {
+  background: #b91c1c;
+  transform: translateY(-2px);
+}
+
+.input-error {
+  border: 2px solid var(--color-danger);
+}
+
+.error-msg {
+  color: var(--color-danger);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+
+/* ===== ESTADOS ===== */
+.loading {
+  color: var(--color-primary);
+  font-size: 1.2rem;
+  text-align: center;
+  position: relative;
+}
+
+.loading::after {
+  content: "";
+  display: inline-block;
+  margin-left: 0.5rem;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--color-primary);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  color: var(--color-danger);
+  font-weight: bold;
+  text-align: center;
+  margin-top: 1rem;
+  animation: shake 0.25s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+  .account-form {
+    flex-direction: column;
+  }
+
+  .accounts-table th,
+  .accounts-table td {
+    font-size: 0.9rem;
+  }
+}

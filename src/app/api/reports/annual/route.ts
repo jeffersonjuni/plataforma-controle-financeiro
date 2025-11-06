@@ -17,9 +17,12 @@ export async function GET(req: Request) {
 
     const { searchParams } = new URL(req.url);
     const yearParam = searchParams.get("year");
-    const year = yearParam ? Number(yearParam) : new Date().getFullYear();
+    const accountIdParam = searchParams.get("accountId");
 
-    const report = await getAnnualReport(decoded.userId, year);
+    const year = yearParam ? Number(yearParam) : new Date().getFullYear();
+    const accountId = accountIdParam ? Number(accountIdParam) : undefined;
+
+    const report = await getAnnualReport(decoded.userId, year, accountId);
 
     return NextResponse.json(report);
   } catch (error) {

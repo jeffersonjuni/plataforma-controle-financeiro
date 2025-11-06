@@ -17,11 +17,13 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const monthParam = searchParams.get("month");
     const yearParam = searchParams.get("year");
+    const accountIdParam = searchParams.get("accountId");
 
     const month = monthParam ? Number(monthParam) : new Date().getMonth() + 1;
     const year = yearParam ? Number(yearParam) : new Date().getFullYear();
+    const accountId = accountIdParam ? Number(accountIdParam) : undefined;
 
-    const report = await getMonthlyReport(decoded.userId, month, year);
+    const report = await getMonthlyReport(decoded.userId, month, year, accountId);
     return NextResponse.json(report);
   } catch (error) {
     console.error("Erro ao gerar relatório mensal:", error);

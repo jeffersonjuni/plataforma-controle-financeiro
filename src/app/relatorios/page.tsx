@@ -1,11 +1,15 @@
-// app/relatorios/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import AppWrapper from "@/components/AppWrapper";
 import Toast from "@/components/Toast";
 import "@/styles/relatorios.css";
+
+interface Account {
+  id: number;
+  name: string;
+}
 
 export default function RelatoriosPage() {
   const router = useRouter();
@@ -16,17 +20,51 @@ export default function RelatoriosPage() {
   const [month, setMonth] = useState<number | "">("");
   const [startMonth, setStartMonth] = useState<number | "">("");
   const [endMonth, setEndMonth] = useState<number | "">("");
+  const [accountId, setAccountId] = useState<number | "">("");
+  const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState("");
 
   const months = [
-    { value: 1, label: "Janeiro" }, { value: 2, label: "Fevereiro" }, { value: 3, label: "Março" },
-    { value: 4, label: "Abril" }, { value: 5, label: "Maio" }, { value: 6, label: "Junho" },
-    { value: 7, label: "Julho" }, { value: 8, label: "Agosto" }, { value: 9, label: "Setembro" },
-    { value: 10, label: "Outubro" }, { value: 11, label: "Novembro" }, { value: 12, label: "Dezembro" },
+    { value: 1, label: "Janeiro" },
+    { value: 2, label: "Fevereiro" },
+    { value: 3, label: "Março" },
+    { value: 4, label: "Abril" },
+    { value: 5, label: "Maio" },
+    { value: 6, label: "Junho" },
+    { value: 7, label: "Julho" },
+    { value: 8, label: "Agosto" },
+    { value: 9, label: "Setembro" },
+    { value: 10, label: "Outubro" },
+    { value: 11, label: "Novembro" },
+    { value: 12, label: "Dezembro" },
   ];
 
+  // 🔹 Buscar contas do usuário
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return router.push("/login");
+
+        const res = await fetch("/api/accounts", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) throw new Error("Erro ao carregar contas");
+
+        const data = await res.json();
+        setAccounts(data);
+      } catch (err) {
+        console.error(err);
+        setToastMessage("❌ Erro ao carregar contas.");
+      }
+    };
+
+    fetchAccounts();
+  }, [router]);
+
+  // 🔹 Exportar relatório
   const handleExport = async () => {
     setLoading(true);
     setError(null);
@@ -45,6 +83,7 @@ export default function RelatoriosPage() {
         params.append("startMonth", String(startMonth));
         params.append("endMonth", String(endMonth));
       }
+      if (accountId) params.append("accountId", String(accountId));
 
       const response = await fetch(`/api/reports/export?${params.toString()}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -52,13 +91,13 @@ export default function RelatoriosPage() {
 
       if (response.status === 204) {
         setError("Nenhum dado encontrado para os filtros selecionados.");
+        setToastMessage("⚠️ Nenhum dado encontrado.");
         return;
       }
 
       if (!response.ok) {
         const err = await response.json();
-        setError(err.error || "Erro ao exportar relatório.");
-        return;
+        throw new Error(err.error || "Erro ao exportar relatório.");
       }
 
       const blob = await response.blob();
@@ -90,6 +129,19 @@ export default function RelatoriosPage() {
         </header>
 
         <div className="filters-container">
+          {/* 🔹 Filtro de Conta */}
+          <div className="form-group">
+            <label>Conta</label>
+            <select value={accountId} onChange={(e) => setAccountId(Number(e.target.value))}>
+              <option value="">Todas as Contas</option>
+              {accounts.map((acc) => (
+                <option key={acc.id} value={acc.id}>
+                  {acc.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className="form-group">
             <label>Tipo de Relatório</label>
             <select value={reportType} onChange={(e) => setReportType(e.target.value)}>
@@ -114,7 +166,11 @@ export default function RelatoriosPage() {
               <label>Mês</label>
               <select value={month} onChange={(e) => setMonth(Number(e.target.value))}>
                 <option value="">Selecione</option>
-                {months.map((m) => <option key={m.value} value={m.value}>{m.label}</option>)}
+                {months.map((m) => (
+                  <option key={m.value} value={m.value}>
+                    {m.label}
+                  </option>
+                ))}
               </select>
             </div>
           )}
@@ -125,14 +181,23 @@ export default function RelatoriosPage() {
                 <label>Mês Inicial</label>
                 <select value={startMonth} onChange={(e) => setStartMonth(Number(e.target.value))}>
                   <option value="">Selecione</option>
-                  {months.map((m) => <option key={m.value} value={m.value}>{m.label}</option>)}
+                  {months.map((m) => (
+                    <option key={m.value} value={m.value}>
+                      {m.label}
+                    </option>
+                  ))}
                 </select>
               </div>
+
               <div className="form-group">
                 <label>Mês Final</label>
                 <select value={endMonth} onChange={(e) => setEndMonth(Number(e.target.value))}>
                   <option value="">Selecione</option>
-                  {months.map((m) => <option key={m.value} value={m.value}>{m.label}</option>)}
+                  {months.map((m) => (
+                    <option key={m.value} value={m.value}>
+                      {m.label}
+                    </option>
+                  ))}
                 </select>
               </div>
             </>
@@ -151,7 +216,6 @@ export default function RelatoriosPage() {
           {loading ? "Gerando..." : "Gerar Relatório"}
         </button>
 
-        {/* Mensagens de erro e toast */}
         {error && <p className="error-message">{error}</p>}
         {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage("")} />}
       </section>

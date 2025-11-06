@@ -114,6 +114,23 @@
   border-left-color: var(--color-danger);
 }
 
+.form-group select {
+  cursor: pointer;
+}
+
+.form-group select:disabled {
+  background-color: #e5e7eb;
+  cursor: not-allowed;
+}
+
+.reports-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -124,6 +141,7 @@
     transform: translateY(0);
   }
 }
+
 
 /* === Responsividade === */
 @media (max-width: 768px) {

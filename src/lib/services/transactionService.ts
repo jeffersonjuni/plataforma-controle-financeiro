@@ -2,6 +2,8 @@ import prisma from "@/lib/prisma";
 import { checkAccountLimit, checkDuplicateTransaction } from "./transactionValidations";
 import { createLog } from "./logService";
 import type { Transaction, Account } from "@prisma/client";
+import { updateAccountBalance } from "../updateAccountBalance";
+
 
 export type TransactionType = "ENTRADA" | "SAIDA";
 export type TransactionCategory = "FIXA" | "VARIAVEL";
@@ -118,4 +120,68 @@ export async function listTransactionsByUser(
     include: { account: true },
     orderBy: { date: "desc" },
   });
+}
+
+export async function updateTransaction(
+  id: number,
+  accountId: number,
+  description: string,
+  amount: number,
+  type: TransactionType,
+  category: TransactionCategory,
+  date?: string,
+  userId?: number
+): Promise<Transaction> {
+  try {
+    const existing = await prisma.transaction.findUnique({ where: { id } });
+    if (!existing) {
+      await createLog("ERROR", "Transação não encontrada para atualização", { id, accountId }, userId);
+      throw new Error("Transação não encontrada");
+    }
+
+    const updated = await prisma.transaction.update({
+      where: { id },
+      data: {
+        description,
+        amount,
+        type,
+        category,
+        date: date ? new Date(date) : undefined,
+      },
+    });
+
+
+    await updateAccountBalance(accountId);
+
+    await createLog("AUDIT", "Transação atualizada com sucesso", { transactionId: id, accountId }, userId);
+    return updated;
+  } catch (err: any) {
+    await createLog("ERROR", "Erro ao atualizar transação", { error: err.message, id, accountId }, userId);
+    throw err;
+  }
+}
+
+
+export async function deleteTransaction(
+  id: number,
+  accountId: number,
+  userId?: number
+): Promise<void> {
+  try {
+    const existing = await prisma.transaction.findUnique({ where: { id } });
+    if (!existing) {
+      await createLog("ERROR", "Transação não encontrada para exclusão", { id, accountId }, userId);
+      throw new Error("Transação não encontrada");
+    }
+
+    await prisma.transaction.delete({ where: { id } });
+
+    
+    await updateAccountBalance(accountId);
+
+    await createLog("AUDIT", "Transação excluída com sucesso", { transactionId: id, accountId }, userId);
+  } catch (err: any) {
+    await createLog("ERROR", "Erro ao excluir transação", { error: err.message, id, accountId }, userId);
+    throw err;
+  }
 }

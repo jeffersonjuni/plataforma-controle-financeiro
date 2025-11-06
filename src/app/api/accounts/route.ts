@@ -1,50 +1,57 @@
-import { NextRequest, NextResponse } from "next/server";
-import { createAccount, listAccounts } from "@/lib/services/accountService";
-import { requireAuth } from "@/lib/middlewares";
-import { AccountType } from "@prisma/client";
+import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+import { getUserFromToken } from "@/lib/authService";
 
-export async function GET(req: NextRequest) {
+
+export async function POST(req: Request) {
   try {
-    const user = await requireAuth(req); 
-    if (!user) throw new Error("Token inválido");
+    const token = req.headers.get("authorization")?.split(" ")[1];
+    if (!token) return NextResponse.json({ error: "Token ausente" }, { status: 401 });
 
-    const accounts = await listAccounts(user.id);
-    return NextResponse.json(accounts);
-  } catch (err: any) {
-    return NextResponse.json(
-      { error: err.message ?? "Unauthorized" },
-      { status: err.message.includes("token") ? 401 : 500 }
-    );
-  }
-}
+    const user = await getUserFromToken(token);
+    if (!user) return NextResponse.json({ error: "Usuário inválido" }, { status: 401 });
 
-export async function POST(req: NextRequest) {
-  try {
-    const user = await requireAuth(req);
-    if (!user) throw new Error("Token inválido");
+    const body = await req.json();
+    const { name, balance, type } = body;
 
-    const { name, type: typeString, balance } = await req.json();
-
-    if (!name || !typeString) {
+    if (!name || balance === undefined || !type) {
       return NextResponse.json({ error: "Campos obrigatórios faltando" }, { status: 400 });
     }
 
-    // Verifica se o tipo enviado é válido
-    if (!["CORRENTE", "POUPANCA"].includes(typeString)) {
+    
+    const accountType = type.toUpperCase();
+    if (!["CORRENTE", "POUPANCA", "INVESTIMENTO"].includes(accountType)) {
       return NextResponse.json({ error: "Tipo de conta inválido" }, { status: 400 });
     }
 
-    const account = await createAccount(
-      user.id,
-      name,
-      typeString as AccountType,
-      balance ?? 0
-    );
+    const newAccount = await prisma.account.create({
+      data: { name, balance, type: accountType as "CORRENTE" | "POUPANCA" | "INVESTIMENTO", userId: user.id },
+    });
 
-    return NextResponse.json(account, { status: 201 });
-  } catch (err: any) {
-    const status =
-      err.message.includes("token") || err.message.includes("autorização") ? 401 : 400;
-    return NextResponse.json({ error: err.message ?? "Erro" }, { status });
+    return NextResponse.json(newAccount, { status: 201 });
+  } catch (error: any) {
+    console.error("Erro ao criar conta:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+
+export async function GET(req: Request) {
+  try {
+    const token = req.headers.get("authorization")?.split(" ")[1];
+    if (!token) return NextResponse.json({ error: "Token ausente" }, { status: 401 });
+
+    const user = await getUserFromToken(token);
+    if (!user) return NextResponse.json({ error: "Usuário inválido" }, { status: 401 });
+
+    const accounts = await prisma.account.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return NextResponse.json(accounts);
+  } catch (error: any) {
+    console.error("Erro ao listar contas:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

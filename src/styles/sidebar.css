@@ -9,12 +9,14 @@
   box-sizing: border-box;
 }
 
+/* Usuário */
 .user-section {
   margin-bottom: 2rem;
   font-weight: bold;
   font-size: 1.1rem;
 }
 
+/* Navegação */
 nav ul {
   list-style: none;
   padding: 0;
@@ -25,7 +27,8 @@ nav li {
   margin-bottom: 1rem;
 }
 
-nav a, nav button {
+nav a,
+nav button {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -41,24 +44,35 @@ nav a, nav button {
   transition: background 0.2s, color 0.2s;
 }
 
-nav a:hover, nav button:hover {
+/* Hover e foco */
+nav a:hover,
+nav button:hover {
   background-color: var(--color-secondary);
   color: var(--color-accent);
 }
 
+/* Link ativo */
+nav a.active {
+  background-color: var(--color-secondary);
+  color: var(--color-accent);
+}
+
+/* Botão de logout */
 .logout {
   text-align: left;
 }
- .username {
+
+/* Seção do nome de usuário */
+.username {
   display: flex;
   align-items: center;
-  gap: 0.5rem; 
-  font-weight: 600; 
-  font-size: 1rem; 
-  color: var(--cor-text2);
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-text2);
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
-  background-color: var(--cor-bg-sidebar); 
+  background-color: var(--color-primary);
 }
 
 .username-icon {
@@ -68,7 +82,7 @@ nav a:hover, nav button:hover {
 .username-text {
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; 
+  text-overflow: ellipsis;
 }
 
 .username-link {
@@ -85,7 +99,7 @@ nav a:hover, nav button:hover {
 }
 
 .username-icon img {
-  width: 24px;     
+  width: 24px;
   height: 24px;
   object-fit: contain;
   display: block;

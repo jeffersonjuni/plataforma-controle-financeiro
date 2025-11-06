@@ -18,12 +18,18 @@ export async function GET(req: Request) {
     const url = new URL(req.url);
     const month = Number(url.searchParams.get("month"));
     const year = Number(url.searchParams.get("year"));
+    const accountIdParam = url.searchParams.get("accountId");
 
     if (!month || !year) {
-      return NextResponse.json({ error: "Mês e ano são obrigatórios" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Mês e ano são obrigatórios" },
+        { status: 400 }
+      );
     }
 
-    const data = await getCategoryReport(decoded.userId, month, year);
+    const accountId = accountIdParam ? Number(accountIdParam) : undefined;
+
+    const data = await getCategoryReport(decoded.userId, month, year, accountId);
 
     return NextResponse.json(data);
   } catch (err: any) {
