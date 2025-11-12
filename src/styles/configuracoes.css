@@ -9,19 +9,25 @@
   min-height: calc(100vh - 4rem);
 }
 
+/* ===== CABEÇALHO ===== */
 .config-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .config-header h2 {
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--color-primary);
+  flex: 1;
+  min-width: 250px;
 }
 
+/* ===== BOTÃO VOLTAR ===== */
 .back-btn {
   background: var(--color-danger);
   color: var(--color-text2);
@@ -29,16 +35,17 @@
   font-weight: 600;
   border-radius: var(--radius-medium);
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .back-btn:hover {
   opacity: 0.85;
 }
 
-/* ===== SEÇÕES COMO CARDS MAIS GRANDES ===== */
+/* ===== SEÇÕES ===== */
 .config-sections {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
   gap: 2.5rem;
 }
 
@@ -65,12 +72,7 @@
   color: var(--color-primary);
 }
 
-.config-card label {
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  display: block;
-}
-
+/* ===== CAMPOS ===== */
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -90,7 +92,7 @@ textarea:focus {
   box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.2);
 }
 
-/* ===== CATEGORIAS ESTILIZADAS ===== */
+/* ===== CATEGORIAS ===== */
 .category-list {
   display: flex;
   flex-wrap: wrap;
@@ -117,6 +119,7 @@ textarea:focus {
   display: flex;
   gap: 1rem;
   margin-top: 0.75rem;
+  flex-wrap: wrap;
 }
 
 .add-category input {
@@ -124,36 +127,34 @@ textarea:focus {
   padding: 0.75rem 1rem;
 }
 
-/* ===== BOTÕES ===== */
+/* ===== BOTÕES DE AÇÃO ===== */
 .config-actions {
   display: flex;
   justify-content: flex-end;
   gap: 1.5rem;
   margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.save-btn,
+.discard-btn {
+  padding: 0.85rem 1.8rem;
+  font-weight: 600;
+  border-radius: var(--radius-medium);
+  transition: all 0.2s ease;
+  color: var(--color-text2);
+  white-space: nowrap;
 }
 
 .save-btn {
   background: var(--color-accent);
-  color: var(--color-text2);
-  padding: 0.85rem 1.8rem;
-  font-weight: 600;
-  border-radius: var(--radius-medium);
-  transition: all 0.2s ease;
-}
-
-.save-btn:hover {
-  opacity: 0.85;
 }
 
 .discard-btn {
   background: var(--color-danger);
-  color: var(--color-text2);
-  padding: 0.85rem 1.8rem;
-  font-weight: 600;
-  border-radius: var(--radius-medium);
-  transition: all 0.2s ease;
 }
 
+.save-btn:hover,
 .discard-btn:hover {
   opacity: 0.85;
 }
@@ -179,7 +180,7 @@ textarea:focus {
 }
 
 .password-tips li::before {
-  content: "❌"; /* ícone padrão */
+  content: "❌";
   display: inline-block;
   width: 1.2rem;
   text-align: center;
@@ -187,7 +188,7 @@ textarea:focus {
 }
 
 .password-tips li.valid::before {
-  content: "✅"; /* substitui o X pelo check */
+  content: "✅";
   color: green;
 }
 
@@ -195,28 +196,68 @@ textarea:focus {
   color: green;
 }
 
+/* ======= BREAKPOINTS ======= */
 
-/* ===== RESPONSIVIDADE ===== */
+/* Telas grandes (até 1400px) */
 @media (max-width: 1400px) {
   .config-container {
     padding: 2.5rem 3rem;
   }
-}
 
-@media (max-width: 1024px) {
-  .config-sections {
-    grid-template-columns: 1fr;
+  .config-header h2 {
+    font-size: 2.2rem;
   }
 }
 
+/* Laptops e tablets grandes */
+@media (max-width: 1024px) {
+  .config-container {
+    padding: 2rem 2.5rem;
+  }
+
+  .config-sections {
+    grid-template-columns: 1fr;
+  }
+
+  .config-card {
+    padding: 2rem;
+  }
+
+  .config-header h2 {
+    font-size: 2rem;
+  }
+}
+
+/* Tablets e celulares grandes */
 @media (max-width: 768px) {
   .config-container {
-    padding: 1.8rem 2rem;
+    padding: 1.5rem;
+    gap: 2rem;
+  }
+
+  .config-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .config-header h2 {
+    font-size: 1.8rem;
+    text-align: left;
+  }
+
+  .config-card {
+    padding: 1.8rem;
+  }
+
+  .config-card h3 {
+    font-size: 1.4rem;
   }
 
   .config-actions {
     flex-direction: column;
     gap: 1rem;
+    align-items: stretch;
   }
 
   .back-btn,
@@ -224,5 +265,117 @@ textarea:focus {
   .discard-btn {
     width: 100%;
     text-align: center;
+    font-size: 1rem;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  select {
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .category-item {
+    font-size: 0.9rem;
   }
 }
+
+/* Celulares pequenos */
+@media (max-width: 480px) {
+  .config-container {
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+
+  .config-header h2 {
+    font-size: 1.6rem;
+    text-align: center;
+    width: 100%;
+  }
+
+  .config-card {
+    padding: 1.4rem;
+  }
+
+  .config-card h3 {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .add-category {
+    flex-direction: column;
+  }
+
+  .category-item {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.9rem;
+  }
+
+  .config-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .back-btn,
+  .save-btn,
+  .discard-btn {
+    font-size: 0.95rem;
+    padding: 0.75rem;
+  }
+}
+
+/* ===== Ajuste de centralização no mobile ===== */
+@media (max-width: 768px) {
+  .config-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza os conteúdos dentro do card */
+  }
+
+  .config-card input,
+  .config-card select,
+  .config-card textarea {
+    max-width: 90%; /* Mantém proporcional em telas menores */
+  }
+
+  .add-category {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .add-category input {
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .config-card {
+    align-items: center;
+  }
+
+  .config-card input,
+  .config-card select,
+  .config-card textarea {
+    width: 100%;
+    max-width: 95%;
+  }
+
+  .add-category {
+    align-items: center;
+  }
+
+  .add-category input {
+    width: 100%;
+    max-width: 95%;
+  }
+
+  .config-actions {
+    align-items: center;
+  }
+
+  .config-actions button {
+    width: 90%;
+  }
+}
+

@@ -157,3 +157,20 @@ p {
   }
 }
 
+@media (max-width: 480px) {
+  body {
+    font-size: 0.95rem;
+  }
+  .content {
+    padding: var(--spacing-sm);
+  }
+}
+
+@media (min-width: 1200px) {
+  .content {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+

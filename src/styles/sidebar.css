@@ -7,6 +7,7 @@
   flex-direction: column;
   padding: 1rem;
   box-sizing: border-box;
+  transition: transform 0.3s ease-in-out;
 }
 
 /* Usuário */
@@ -103,4 +104,148 @@ nav a.active {
   height: 24px;
   object-fit: contain;
   display: block;
+}
+
+
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 220px;
+    padding: 0.8rem;
+  }
+
+  .user-section {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  nav a,
+  nav button {
+    font-size: 0.95rem;
+    padding: 0.4rem;
+  }
+}
+
+/* Celulares */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    background-color: var(--color-primary);
+    z-index: 1000;
+    transform: translateX(-100%);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Classe para abrir a sidebar no mobile */
+  .sidebar.active {
+    transform: translateX(0);
+  }
+
+  .username {
+    font-size: 0.95rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  nav a,
+  nav button {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.6rem;
+  }
+}
+
+/* Telas pequenas (smartphones compactos) */
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    min-height: unset;
+    position: relative;
+    transform: none;
+    box-shadow: none;
+  }
+
+  nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  nav a,
+  nav button {
+    justify-content: center;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  .username {
+    justify-content: center;
+  }
+}
+
+/* ===== Botão de menu (hambúrguer) ===== */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 0.6rem;            /* subiu um pouco */
+  left: 0.6rem;
+  background: var(--color-primary);
+  color: var(--color-text2);
+  border: none;
+  font-size: 1.3rem;      /* menor, proporcional ao botão de sair */
+  z-index: 1100;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 0.2rem 0.45rem; /* tamanho compacto e equilibrado */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.menu-toggle:hover {
+  transform: scale(1.05);
+  background: var(--color-secondary);
+}
+
+/* ===== Fundo escuro quando a sidebar está aberta ===== */
+.overlay {
+  display: none;
+}
+
+.sidebar.active + .overlay,
+.overlay.active {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 900;
+}
+
+/* ===== Mostra o botão e faz o menu funcionar no mobile ===== */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    background-color: var(--color-primary);
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .sidebar.active {
+    transform: translateX(0);
+  }
 }

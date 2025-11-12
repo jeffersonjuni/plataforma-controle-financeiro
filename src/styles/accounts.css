@@ -126,6 +126,7 @@
   transform: translateY(-2px);
 }
 
+/* ===== ERROS E ESTADOS ===== */
 .input-error {
   border: 2px solid var(--color-danger);
 }
@@ -137,8 +138,6 @@
   display: block;
 }
 
-
-/* ===== ESTADOS ===== */
 .loading {
   color: var(--color-primary);
   font-size: 1.2rem;
@@ -180,13 +179,71 @@
 }
 
 /* ===== RESPONSIVIDADE ===== */
+@media (max-width: 1024px) {
+  .accounts-container {
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+}
+
 @media (max-width: 768px) {
+  .accounts-container {
+    padding: 1rem;
+    border-radius: 8px;
+  }
+
+  .accounts-header {
+    font-size: 1.4rem;
+    text-align: center;
+  }
+
   .account-form {
     flex-direction: column;
+    gap: 0.6rem;
+    padding: 0.8rem;
+  }
+
+  .account-form input,
+  .account-form select,
+  .account-form button {
+    width: 100%;
+    font-size: 0.9rem;
+  }
+
+  .accounts-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 6px;
   }
 
   .accounts-table th,
   .accounts-table td {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    padding: 0.6rem;
+    white-space: nowrap;
+  }
+
+  .delete-btn {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .accounts-container {
+    padding: 0.8rem;
+  }
+
+  .accounts-header {
+    font-size: 1.2rem;
+  }
+
+  .account-form {
+    gap: 0.5rem;
+  }
+
+  .account-form button {
+    padding: 0.5rem 1rem;
   }
 }

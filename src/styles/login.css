@@ -50,3 +50,51 @@
   color: var(--color-danger);
   font-weight: 500;
 }
+
+/* Responsividade aprimorada */
+@media (max-width: 768px) {
+  .login-container {
+    padding: 1.5rem;
+  }
+
+  .login-form {
+    padding: 1.5rem;
+    max-width: 320px;
+  }
+
+  .login-form input,
+  .login-form button {
+    font-size: 0.95rem;
+    padding: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    justify-content: flex-start;
+    padding-top: 4rem;
+  }
+
+  .login-form {
+    padding: 1.2rem;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: none;
+  }
+
+  .login-form input,
+  .login-form button {
+    font-size: 0.9rem;
+    padding: 0.65rem;
+  }
+
+  .login-form button {
+    width: 100%;
+  }
+
+  .error {
+    font-size: 0.9rem;
+    text-align: center;
+  }
+}
