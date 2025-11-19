@@ -54,7 +54,7 @@ export default function TransactionsPage() {
     description: "",
     amount: "",
     type: "ENTRADA",
-    category: "",
+    category: "VARIAVEL",
     date: new Date().toISOString().split("T")[0],
   });
 
@@ -186,7 +186,9 @@ export default function TransactionsPage() {
 
   // === Excluir ===
   const handleDelete = async (id: string, accountId: string) => {
-    const confirmed = window.confirm("Tem certeza que deseja excluir esta transação?");
+    const confirmed = window.confirm(
+      "Tem certeza que deseja excluir esta transação?"
+    );
     if (!confirmed) return;
 
     try {
@@ -286,7 +288,10 @@ export default function TransactionsPage() {
 
           <label>
             Mês:
-            <select value={month} onChange={(e) => setMonth(Number(e.target.value))}>
+            <select
+              value={month}
+              onChange={(e) => setMonth(Number(e.target.value))}
+            >
               {months.map((m) => (
                 <option key={m} value={m}>
                   {m.toString().padStart(2, "0")}
@@ -297,7 +302,10 @@ export default function TransactionsPage() {
 
           <label>
             Ano:
-            <select value={year} onChange={(e) => setYear(Number(e.target.value))}>
+            <select
+              value={year}
+              onChange={(e) => setYear(Number(e.target.value))}
+            >
               {years.map((y) => (
                 <option key={y} value={y}>
                   {y}
@@ -310,15 +318,30 @@ export default function TransactionsPage() {
         <div className="summary-container">
           <div className="summary-card entrada">
             <h3>Entradas</h3>
-            <p>{summary.entrada.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</p>
+            <p>
+              {summary.entrada.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </p>
           </div>
           <div className="summary-card saida">
             <h3>Saídas</h3>
-            <p>{summary.saida.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</p>
+            <p>
+              {summary.saida.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </p>
           </div>
           <div className="summary-card saldo">
             <h3>Saldo Total</h3>
-            <p>{summary.saldoTotal.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</p>
+            <p>
+              {summary.saldoTotal.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </p>
           </div>
         </div>
 
@@ -344,18 +367,25 @@ export default function TransactionsPage() {
             <option value="ENTRADA">Entrada</option>
             <option value="SAIDA">Saída</option>
           </select>
-          <input
-            type="text"
-            placeholder="Categoria"
+          <select
             value={form.category}
             onChange={(e) => setForm({ ...form, category: e.target.value })}
             required
-          />
+          >
+            <option value="">Selecione a categoria</option>
+            <option value="FIXA">Fixa</option>
+            <option value="VARIAVEL">Variável</option>
+          </select>
+
           <input
             type="date"
             value={form.date}
-            onChange={(e) => setForm({ ...form, date: e.target.value })}
+            onChange={(e) => {
+              const date = e.target.value;
+              setForm({ ...form, date });
+            }}
           />
+
           <button type="submit">Adicionar</button>
         </form>
 
@@ -371,14 +401,18 @@ export default function TransactionsPage() {
                 <th>Categoria</th>
                 <th>Valor</th>
                 <th>Data</th>
-                <th>Ações</th>
+                <th className="actions-header">Ações</th>
               </tr>
             </thead>
             <tbody>
               {transactions.map((t) => (
                 <tr key={t.id}>
                   <td>{t.description}</td>
-                  <td className={t.type === "ENTRADA" ? "type-income" : "type-expense"}>
+                  <td
+                    className={
+                      t.type === "ENTRADA" ? "type-income" : "type-expense"
+                    }
+                  >
                     {t.type}
                   </td>
                   <td>{t.category}</td>
@@ -390,8 +424,15 @@ export default function TransactionsPage() {
                   </td>
                   <td>{new Date(t.date).toLocaleDateString("pt-BR")}</td>
                   <td className="actions">
-                    <button onClick={() => handleEdit(t)} className="edit-btn">✏️</button>
-                    <button onClick={() => handleDelete(t.id, t.accountId)} className="delete-btn">🗑️</button>
+                    <button onClick={() => handleEdit(t)} className="edit-btn">
+                      Editar
+                    </button>
+                    <button
+                      onClick={() => handleDelete(t.id, t.accountId)}
+                      className="delete-btn"
+                    >
+                      Excluir
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -399,7 +440,9 @@ export default function TransactionsPage() {
           </table>
         )}
 
-        {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage("")} />}
+        {toastMessage && (
+          <Toast message={toastMessage} onClose={() => setToastMessage("")} />
+        )}
       </div>
     </AppWrapper>
   );

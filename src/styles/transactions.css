@@ -198,12 +198,21 @@
   font-weight: 600;
 }
 
-.transactions-table .actions {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
+.actions-header {
+  text-align: center !important;
+  width: 120px; /* largura fixa para alinhar */
 }
 
+
+.transactions-table .actions {
+  display: flex;
+  justify-content: center;   /* Centraliza horizontalmente */
+  align-items: center;       /* Centraliza verticalmente */
+  gap: 8px;
+  height: 100%;
+}
+
+/* Botões */
 .edit-btn,
 .delete-btn {
   border: none;
@@ -222,6 +231,7 @@
   color: #e63946;
   transform: scale(1.1);
 }
+
 
 .error {
   color: #e63946;

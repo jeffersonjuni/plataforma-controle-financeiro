@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import AppWrapper from "@/components/AppWrapper";
 import Toast from "@/components/Toast";
 import "@/styles/accounts.css";
-import { formatCurrency } from "@/utils/formatCurrency"; 
+import { formatCurrency } from "@/utils/formatCurrency";
 
 type Account = {
   id: number;
@@ -17,31 +17,47 @@ type Account = {
 
 export default function AccountsPage() {
   const router = useRouter();
+  const abortController = useRef<AbortController | null>(null);
+
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState("");
+
   const [formErrors, setFormErrors] = useState<{ name?: string; balance?: string }>({});
+  const [editingId, setEditingId] = useState<number | null>(null);
+
   const [form, setForm] = useState({
     name: "",
     type: "CORRENTE",
     balance: "",
   });
 
+  /* =============================
+        BUSCAR CONTAS
+  ============================== */
   const fetchAccounts = async () => {
     try {
       setLoading(true);
+      setError(null);
+
       const token = localStorage.getItem("token");
       if (!token) return router.push("/login");
 
+      if (abortController.current) abortController.current.abort();
+      abortController.current = new AbortController();
+
       const res = await fetch("/api/accounts", {
         headers: { Authorization: `Bearer ${token}` },
+        signal: abortController.current.signal,
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Erro ao carregar contas");
+
       setAccounts(data);
     } catch (err: any) {
+      if (err.name === "AbortError") return;
       setError(err.message);
       setToastMessage("❌ Erro ao carregar contas.");
     } finally {
@@ -49,17 +65,25 @@ export default function AccountsPage() {
     }
   };
 
+  /* =============================
+           VALIDAÇÃO
+  ============================== */
   const validateForm = () => {
     const errors: { name?: string; balance?: string } = {};
 
     if (!form.name.trim()) errors.name = "O nome da conta não pode estar vazio.";
+
     const balanceNum = Number(form.balance);
-    if (isNaN(balanceNum) || balanceNum < 0) errors.balance = "Saldo inválido. Deve ser ≥ 0.";
+    if (isNaN(balanceNum) || balanceNum < 0)
+      errors.balance = "Informe um saldo válido (≥ 0).";
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
+  /* =============================
+          CRIAR CONTA
+  ============================== */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -79,7 +103,7 @@ export default function AccountsPage() {
         body: JSON.stringify({
           name: form.name,
           type: form.type.toUpperCase(),
-          balance: Number(form.balance) || 0,
+          balance: Number(form.balance),
         }),
       });
 
@@ -89,6 +113,7 @@ export default function AccountsPage() {
       setForm({ name: "", type: "CORRENTE", balance: "" });
       setFormErrors({});
       setToastMessage("✅ Conta criada com sucesso!");
+
       fetchAccounts();
     } catch (err: any) {
       setError(err.message);
@@ -96,6 +121,58 @@ export default function AccountsPage() {
     }
   };
 
+  /* =============================
+           INICIAR EDIÇÃO
+  ============================== */
+  const startEditing = (acc: Account) => {
+    setEditingId(acc.id);
+    setForm({
+      name: acc.name,
+      type: acc.type,
+      balance: String(acc.balance),
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  /* =============================
+            SALVAR EDIÇÃO
+  ============================== */
+  const handleUpdate = async () => {
+    if (!validateForm() || editingId === null) return;
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return router.push("/login");
+
+      const res = await fetch(`/api/accounts/${editingId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name: form.name,
+          type: form.type,
+          balance: Number(form.balance),
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Erro ao atualizar conta");
+
+      setToastMessage("✅ Conta atualizada com sucesso!");
+      setEditingId(null);
+      setForm({ name: "", type: "CORRENTE", balance: "" });
+      fetchAccounts();
+    } catch (err: any) {
+      setToastMessage("❌ Não foi possível atualizar a conta.");
+      setError(err.message);
+    }
+  };
+
+  /* =============================
+           EXCLUIR
+  ============================== */
   const handleDelete = async (id: number) => {
     if (!confirm("Tem certeza que deseja excluir esta conta?")) return;
 
@@ -114,22 +191,24 @@ export default function AccountsPage() {
       setToastMessage("✅ Conta excluída com sucesso!");
       fetchAccounts();
     } catch (err: any) {
+      setToastMessage("❌ Não foi possível excluir a conta.");
       setError(err.message);
-      setToastMessage("❌ Ocorreu um erro ao excluir conta.");
     }
   };
 
   useEffect(() => {
     fetchAccounts();
+    return () => abortController.current?.abort();
   }, []);
 
   return (
     <AppWrapper>
       <div className="accounts-container">
         <header className="accounts-header">
-          <h2>Contas</h2>
+          <h2>{editingId ? "Editar Conta" : "Contas"}</h2>
         </header>
 
+        {/* FORMULÁRIO */}
         <form className="account-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <input
@@ -162,12 +241,19 @@ export default function AccountsPage() {
             {formErrors.balance && <small className="error-msg">{formErrors.balance}</small>}
           </div>
 
-          <button type="submit">Adicionar Conta</button>
+          {editingId ? (
+            <button type="button" onClick={handleUpdate}>
+              Salvar Alterações
+            </button>
+          ) : (
+            <button type="submit">Adicionar Conta</button>
+          )}
         </form>
 
         {error && <p className="error">{error}</p>}
         {loading && <p className="loading">Carregando...</p>}
 
+        {/* TABELA */}
         {!loading && accounts.length > 0 && (
           <table className="accounts-table">
             <thead>
@@ -184,10 +270,16 @@ export default function AccountsPage() {
                 <tr key={a.id}>
                   <td>{a.name}</td>
                   <td>{a.type}</td>
-                  {/* ✅ Aplicando formatCurrency */}
                   <td>{formatCurrency(a.balance)}</td>
                   <td>{new Date(a.createdAt).toLocaleDateString("pt-BR")}</td>
-                  <td>
+                  <td style={{ display: "flex", gap: "0.5rem" }}>
+                    <button
+                      className="edit-btn"
+                      onClick={() => startEditing(a)}
+                    >
+                      Editar
+                    </button>
+
                     <button
                       className="delete-btn"
                       onClick={() => handleDelete(a.id)}
@@ -201,7 +293,9 @@ export default function AccountsPage() {
           </table>
         )}
 
-        {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage("")} />}
+        {toastMessage && (
+          <Toast message={toastMessage} onClose={() => setToastMessage("")} />
+        )}
       </div>
     </AppWrapper>
   );

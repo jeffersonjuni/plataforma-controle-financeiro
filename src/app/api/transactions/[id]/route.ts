@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { verifyToken } from "@/lib/authService";
+import { verifyToken } from "@/lib/jwt";
 import { createLog } from "@/lib/services/logService";
 import {
   updateTransaction,

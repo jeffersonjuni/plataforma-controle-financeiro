@@ -14,21 +14,47 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
 
     const { searchParams } = new URL(req.url, "http://localhost");
+
+    const period = searchParams.get("period") ?? "monthly";
     const month = Number(searchParams.get("month"));
     const year = Number(searchParams.get("year"));
     const accountIdParam = searchParams.get("accountId");
     const accountId = accountIdParam ? Number(accountIdParam) : undefined;
 
-    const startDate = month && year ? new Date(year, month - 1, 1) : undefined;
-    const endDate =
-      month && year ? new Date(year, month, 0, 23, 59, 59) : undefined;
+    // -----------------------------------------------------
+    // PERIOD LOGIC
+    // -----------------------------------------------------
+    let startDate: Date | undefined = undefined;
+    let endDate: Date | undefined = undefined;
 
+    const now = new Date();
+
+    if (period === "weekly") {
+      const current = new Date(year, month - 1, now.getDate());
+      const first = current.getDate() - current.getDay();
+      const last = first + 6;
+
+      startDate = new Date(year, month - 1, first, 0, 0, 0);
+      endDate = new Date(year, month - 1, last, 23, 59, 59);
+    }
+
+    if (period === "monthly") {
+      startDate = new Date(year, month - 1, 1);
+      endDate = new Date(year, month, 0, 23, 59, 59);
+    }
+
+    if (period === "yearly") {
+      startDate = new Date(year, 0, 1);
+      endDate = new Date(year, 11, 31, 23, 59, 59);
+    }
+
+    // -----------------------------------------------------
+    // WHERE BASE
+    // -----------------------------------------------------
     const baseWhere: any = {
       account: { userId: user.id },
       ...(accountId ? { accountId } : {}),
-      ...(startDate && endDate
-        ? { date: { gte: startDate, lte: endDate } }
-        : {}),
+      ...(startDate && endDate ? { date: { gte: startDate, lte: endDate } } : {}),
     };
 
     const transactions = await prisma.transaction.findMany({
@@ -37,6 +63,9 @@ export async function GET(req: Request) {
       orderBy: { date: "desc" },
     });
 
+    // -----------------------------------------------------
+    // SUMMARY
+    // -----------------------------------------------------
     const summary = transactions.reduce(
       (acc, t) => {
         if (t.type === TransactionType.ENTRADA) acc.income += t.amount;
@@ -45,14 +74,13 @@ export async function GET(req: Request) {
       },
       { income: 0, expense: 0, balance: 0 }
     );
+
     summary.balance = summary.income - summary.expense;
 
-    const monthlyData: {
-      month: number;
-      income: number;
-      expense: number;
-      balance: number;
-    }[] = Array.from({ length: 12 }, (_, i) => ({
+    // -----------------------------------------------------
+    // MONTHLY DATA (gráficos)
+    // -----------------------------------------------------
+    const monthlyData = Array.from({ length: 12 }, (_, i) => ({
       month: i + 1,
       income: 0,
       expense: 0,
@@ -60,16 +88,23 @@ export async function GET(req: Request) {
     }));
 
     transactions.forEach((t) => {
-      if (!t.date) return;
+      if (!t.date) return; // ← ❗ FIX do erro "t.date é possivelmente null"
+
       const monthIndex = t.date.getMonth();
+
       if (t.type === TransactionType.ENTRADA)
         monthlyData[monthIndex].income += t.amount;
+
       if (t.type === TransactionType.SAIDA)
         monthlyData[monthIndex].expense += t.amount;
+
       monthlyData[monthIndex].balance =
         monthlyData[monthIndex].income - monthlyData[monthIndex].expense;
     });
 
+    // -----------------------------------------------------
+    // PIE DATA
+    // -----------------------------------------------------
     const accounts = await prisma.account.findMany({
       where: { userId: user.id },
     });
@@ -86,22 +121,31 @@ export async function GET(req: Request) {
       return { name: acc.name, value };
     });
 
+    // -----------------------------------------------------
+    // CATEGORY EXPENSES
+    // -----------------------------------------------------
     const categoryMap: Record<string, number> = {};
+
     transactions.forEach((t) => {
       if (t.type !== TransactionType.SAIDA) return;
-      const key = t.category;
-      if (!categoryMap[key]) categoryMap[key] = 0;
-      categoryMap[key] += t.amount;
+      if (!t.category) return;
+
+      categoryMap[t.category] = (categoryMap[t.category] || 0) + t.amount;
     });
+
     const categoryExpenses = Object.entries(categoryMap).map(
       ([name, value]) => ({
-        category: name,
-        amount: value,
+        name,
+        value,
       })
     );
 
+    // -----------------------------------------------------
+    // RESPONSE
+    // -----------------------------------------------------
     return NextResponse.json({
       success: true,
+      period,
       filters: { month, year, accountId },
       summary,
       monthlyData,
@@ -109,6 +153,7 @@ export async function GET(req: Request) {
       categoryExpenses,
       transactions,
     });
+
   } catch (error) {
     console.error("Erro no dashboard:", error);
     return NextResponse.json(
