@@ -30,8 +30,45 @@
   border: 1px solid #ccc;
 }
 
-.login-form button {
-  background: var(--color-accent);
+
+/* Wrapper do input de senha + botão */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 52px;
+  margin-bottom: 0;
+}
+
+/* Botão mostrar/ocultar senha */
+.show-password-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #e5e7eb;
+  border: none;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #111;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.show-password-btn:hover {
+  background: #d1d5db;
+}
+
+/* 🔘 Botão de enviar igual ao da tela de cadastro */
+.submit-btn {
+  background: var(--color-accent); /* verde do sistema */
   color: white;
   font-weight: bold;
   padding: 0.75rem;
@@ -41,9 +78,10 @@
   transition: background 0.3s;
 }
 
-.login-form button:hover {
-  background: #15803d;
+.submit-btn:hover {
+  background: #15803d; /* verde mais escuro */
 }
+
 
 .error {
   margin-top: 1rem;

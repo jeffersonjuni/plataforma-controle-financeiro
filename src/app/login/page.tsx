@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import "@/styles/login.css";
 import { useRouter } from "next/navigation";
@@ -7,6 +8,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -53,6 +55,7 @@ export default function LoginPage() {
         }}
       >
         <h2>Controle Financeiro</h2>
+
         <input
           type="email"
           placeholder="Email"
@@ -60,17 +63,44 @@ export default function LoginPage() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <input
-          type="password"
-          placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit" disabled={loading}>
+
+        {/* 🔐 CAMPO DE SENHA + MOSTRAR/OCULTAR */}
+        <div className="password-wrapper">
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Senha"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+
+          <button
+            type="button"
+            className="show-password-btn"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? "👁️ Ocultar" : "👁️ Mostrar"}
+          </button>
+        </div>
+
+        <button type="submit" className="submit-btn" disabled={loading}>
           {loading ? "Entrando..." : "Entrar"}
         </button>
+
         {error && <p className="error">{error}</p>}
+
+        <p
+          className="register-link"
+          onClick={() => router.push("/register")}
+          style={{
+            marginTop: "12px",
+            cursor: "pointer",
+            color: "#5bb0ff",
+            textAlign: "center",
+          }}
+        >
+          Criar conta
+        </p>
       </form>
     </div>
   );

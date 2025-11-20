@@ -22,7 +22,12 @@ import "@/styles/dashboard.css";
 import { formatCurrency } from "@/utils/formatCurrency";
 
 type Summary = { income: number; expense: number; balance: number };
-type MonthlyData = { month: number; income: number; expense: number; balance: number };
+type MonthlyData = {
+  month: number;
+  income: number;
+  expense: number;
+  balance: number;
+};
 type PieData = { name: string; value: number };
 type CategoryExpense = { name: string; value: number };
 type Account = { id: string; name: string };
@@ -40,11 +45,19 @@ type DashboardResponse = {
 export default function DashboardPage() {
   const router = useRouter();
 
-  const [summary, setSummary] = useState<Summary>({ income: 0, expense: 0, balance: 0 });
+  const [summary, setSummary] = useState<Summary>({
+    income: 0,
+    expense: 0,
+    balance: 0,
+  });
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
   const [pieData, setPieData] = useState<PieData[]>([]);
-  const [categoryExpenses, setCategoryExpenses] = useState<CategoryExpense[]>([]);
-  const [period, setPeriod] = useState<"weekly" | "monthly" | "yearly">("monthly");
+  const [categoryExpenses, setCategoryExpenses] = useState<CategoryExpense[]>(
+    []
+  );
+  const [period, setPeriod] = useState<"weekly" | "monthly" | "yearly">(
+    "monthly"
+  );
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -54,7 +67,14 @@ export default function DashboardPage() {
   const [error, setError] = useState("");
   const [toastMessage, setToastMessage] = useState("");
 
-  const COLORS = ["#4caf50", "#f44336", "#2196f3", "#ff9800", "#9c27b0", "#ff5722"];
+  const COLORS = [
+    "#4caf50",
+    "#f44336",
+    "#2196f3",
+    "#ff9800",
+    "#9c27b0",
+    "#ff5722",
+  ];
 
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
   const years = Array.from({ length: 21 }, (_, i) => 2020 + i);
@@ -140,7 +160,10 @@ export default function DashboardPage() {
           <div className="filters">
             <label>
               Conta:
-              <select value={accountId} onChange={(e) => setAccountId(e.target.value)}>
+              <select
+                value={accountId}
+                onChange={(e) => setAccountId(e.target.value)}
+              >
                 <option value="">💼 Todas as Contas</option>
                 {accounts.map((acc) => (
                   <option key={acc.id} value={acc.id}>
@@ -152,30 +175,37 @@ export default function DashboardPage() {
 
             <label>
               Período:
-              <select value={period} onChange={(e) => setPeriod(e.target.value as any)}>
+              <select
+                value={period}
+                onChange={(e) => setPeriod(e.target.value as any)}
+              >
                 <option value="weekly">Semanal</option>
                 <option value="monthly">Mensal</option>
                 <option value="yearly">Anual</option>
               </select>
             </label>
 
-            {period !== "yearly" && (
-              <label>
-                Ano:
-                <select value={year} onChange={(e) => setYear(Number(e.target.value))}>
-                  {years.map((y) => (
-                    <option key={y} value={y}>
-                      {y}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            )}
+            <label>
+              Ano:
+              <select
+                value={year}
+                onChange={(e) => setYear(Number(e.target.value))}
+              >
+                {years.map((y) => (
+                  <option key={y} value={y}>
+                    {y}
+                  </option>
+                ))}
+              </select>
+            </label>
 
             {period === "monthly" && (
               <label>
                 Mês:
-                <select value={month} onChange={(e) => setMonth(Number(e.target.value))}>
+                <select
+                  value={month}
+                  onChange={(e) => setMonth(Number(e.target.value))}
+                >
                   {months.map((m) => (
                     <option key={m} value={m}>
                       {m}
@@ -188,7 +218,10 @@ export default function DashboardPage() {
             {period === "weekly" && (
               <label>
                 Semana:
-                <select value={month} onChange={(e) => setMonth(Number(e.target.value))}>
+                <select
+                  value={month}
+                  onChange={(e) => setMonth(Number(e.target.value))}
+                >
                   {Array.from({ length: 52 }, (_, i) => i + 1).map((w) => (
                     <option key={w} value={w}>
                       Semana {w}
@@ -244,7 +277,12 @@ export default function DashboardPage() {
                 <YAxis />
                 <Tooltip content={renderTooltip} />
                 <Legend />
-                <Line type="monotone" dataKey="balance" stroke="#2196f3" strokeWidth={2} />
+                <Line
+                  type="monotone"
+                  dataKey="balance"
+                  stroke="#2196f3"
+                  strokeWidth={2}
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -254,7 +292,13 @@ export default function DashboardPage() {
 
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
-                <Pie data={pieData} dataKey="value" nameKey="name" outerRadius={100} label>
+                <Pie
+                  data={pieData}
+                  dataKey="value"
+                  nameKey="name"
+                  outerRadius={100}
+                  label
+                >
                   {pieData.map((_, i) => (
                     <Cell key={i} fill={COLORS[i % COLORS.length]} />
                   ))}
@@ -280,7 +324,9 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage("")} />}
+      {toastMessage && (
+        <Toast message={toastMessage} onClose={() => setToastMessage("")} />
+      )}
     </AppWrapper>
   );
 }

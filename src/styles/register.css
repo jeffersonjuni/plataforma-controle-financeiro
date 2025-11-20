@@ -1,0 +1,196 @@
+/* Container geral */
+.register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: var(--color-background);
+  color: var(--color-text);
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* Card do formulário */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 360px;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.register-form h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #111;
+}
+
+/* Inputs */
+.register-form input {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* ---------- SENHA + BOTÃO MOSTRAR ---------- */
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 56px; /* Espaço ideal para o botão */
+  margin-bottom: 0;
+}
+
+/* Botão mostrar/ocultar senha */
+.show-password-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #f3f4f6;
+  border: 1px solid #ccc;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #333;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.show-password-btn:hover {
+  background: #e5e7eb;
+  border-color: #bbb;
+}
+
+/* Lista de requisitos da senha */
+.password-tips {
+  list-style: none;
+  margin: -0.5rem 0 0.5rem 0;
+  padding: 0;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.password-tips li {
+  margin-bottom: 0.25rem;
+}
+
+.password-tips li.valid {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+/* ---------- BOTÃO PRINCIPAL ---------- */
+
+.register-form .submit-btn {
+  background: var(--color-accent);
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.register-form .submit-btn:hover {
+  background: #15803d;
+}
+
+/* Mensagens */
+.error {
+  margin-top: 0.5rem;
+  color: var(--color-danger);
+  font-weight: 500;
+  text-align: center;
+}
+
+.success {
+  margin-top: 0.5rem;
+  color: #16a34a;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Link para login */
+.link {
+  color: #3b82f6;
+  text-align: center;
+  margin-top: 0.75rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+/* ---------- RESPONSIVIDADE ---------- */
+
+@media (max-width: 768px) {
+  .register-container {
+    padding: 1.5rem;
+  }
+
+  .register-form {
+    padding: 1.5rem;
+    max-width: 320px;
+  }
+
+  .register-form input,
+  .register-form .submit-btn {
+    font-size: 0.95rem;
+    padding: 0.7rem;
+  }
+
+  .show-password-btn {
+    font-size: 0.72rem;
+    padding: 3px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-container {
+    justify-content: flex-start;
+    padding-top: 4rem;
+  }
+
+  .register-form {
+    padding: 1.2rem;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: none;
+  }
+
+  .register-form input,
+  .register-form .submit-btn {
+    font-size: 0.9rem;
+    padding: 0.65rem;
+  }
+
+  .show-password-btn {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+  }
+
+  .error,
+  .success {
+    font-size: 0.9rem;
+  }
+
+  .password-tips {
+    font-size: 0.8rem;
+  }
+}
