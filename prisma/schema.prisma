@@ -41,9 +41,14 @@ model User {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
+  
+  resetToken      String?   @db.VarChar(255)
+  resetTokenExp   DateTime?
+
   accounts       Account[]
   categories     Category[]
 }
+
 
 model Account {
   id          Int          @id @default(autoincrement())

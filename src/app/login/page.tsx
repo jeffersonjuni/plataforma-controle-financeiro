@@ -89,6 +89,7 @@ export default function LoginPage() {
 
         {error && <p className="error">{error}</p>}
 
+        {/* 🔗 CRIAR CONTA */}
         <p
           className="register-link"
           onClick={() => router.push("/register")}
@@ -100,6 +101,20 @@ export default function LoginPage() {
           }}
         >
           Criar conta
+        </p>
+
+        {/* 🔗 ESQUECI MINHA SENHA */}
+        <p
+          onClick={() => router.push("/forgot-password")}
+          className="register-link"
+          style={{
+            marginTop: "8px",
+            cursor: "pointer",
+            color: "#5bb0ff",
+            textAlign: "center",
+          }}
+        >
+          Esqueci minha senha
         </p>
       </form>
     </div>
