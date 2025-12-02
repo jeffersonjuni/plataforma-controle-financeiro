@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import AppWrapper from "@/components/AppWrapper";
 import Toast from "@/components/Toast";
 import "@/styles/accounts.css";
+import "@/styles/mobile/account.mobile.css";
 import { formatCurrency } from "@/utils/formatCurrency";
 
 type Account = {

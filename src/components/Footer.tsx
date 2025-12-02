@@ -1,5 +1,6 @@
 "use client";
 import "@/styles/footer.css";
+import "@/styles/mobile/footer.mobile.css";
 
 export default function Footer() {
   return (

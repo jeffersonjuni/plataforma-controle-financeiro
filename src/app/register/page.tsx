@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import "@/styles/register.css";
+import "@/styles/mobile/register.mobile.css";
 
 export default function RegisterPage() {
   const router = useRouter();

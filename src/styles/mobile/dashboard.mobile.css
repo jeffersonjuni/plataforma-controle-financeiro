@@ -1,0 +1,87 @@
+/* =============================
+   DASHBOARD — RESPONSIVO
+============================= */
+
+/* ===== Tablets Médios (até 1024px) ===== */
+@media (max-width: 1024px) {
+  .dashboard-container {
+    padding: 1.5rem;
+  }
+
+  .dashboard-title {
+    font-size: 1.8rem;
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .chart-container {
+    padding: 1.2rem;
+  }
+
+  .filters select {
+    font-size: 0.95rem;
+    padding: 0.45rem 0.9rem;
+  }
+}
+
+/* ===== Tablets Pequenos e Celulares Grandes (até 768px) ===== */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1.2rem;
+    gap: 1.2rem;
+  }
+
+  .dashboard-title {
+    font-size: 1.6rem;
+    text-align: center;
+  }
+
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.8rem;
+  }
+
+  .filters select {
+    width: 100%;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .card {
+    padding: 1rem 0.8rem;
+  }
+
+  .charts {
+    gap: 1.5rem;
+  }
+}
+
+/* ===== Celulares Médios e Pequenos (até 480px) ===== */
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: 1rem;
+  }
+
+  .dashboard-title {
+    font-size: 1.4rem;
+  }
+
+  .card {
+    padding: 0.8rem;
+    border-radius: 0.8rem;
+  }
+
+  .chart-container {
+    padding: 0.8rem;
+  }
+
+  .filters select {
+    font-size: 0.9rem;
+  }
+}

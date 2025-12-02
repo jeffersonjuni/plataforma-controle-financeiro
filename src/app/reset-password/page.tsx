@@ -3,6 +3,7 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import "@/styles/reset-password.css";
+import "@/styles/mobile/reset-password.mobile.css";
 
 export default function ResetPasswordPage() {
   const params = useSearchParams();

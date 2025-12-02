@@ -1,0 +1,33 @@
+/* ===== Tablets Médios (até 1024px) ===== */
+@media (max-width: 1024px) {
+  .footer {
+    padding: 1rem 0.8rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* ===== Celulares Grandes e Médios (até 768px) ===== */
+@media (max-width: 768px) {
+  .footer {
+    font-size: 0.8rem;
+    padding: 0.9rem 0.6rem;
+    line-height: 1.4;
+  }
+
+  .footer p {
+    margin: 0;
+  }
+}
+
+/* ===== Celulares Pequenos (até 480px) ===== */
+@media (max-width: 480px) {
+  .footer {
+    font-size: 0.75rem;
+    padding: 0.8rem 0.4rem;
+  }
+
+  .footer p {
+    white-space: normal;
+    word-wrap: break-word;
+  }
+}

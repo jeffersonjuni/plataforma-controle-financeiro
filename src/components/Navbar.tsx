@@ -1,5 +1,6 @@
 "use client";
 import "../styles/navbar.css";
+import "@/styles/mobile/navbar.mobile.css";
 
 interface NavbarProps {
   onLogout?: () => void;

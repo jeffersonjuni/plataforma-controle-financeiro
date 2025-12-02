@@ -19,6 +19,7 @@ import {
 import AppWrapper from "@/components/AppWrapper";
 import Toast from "@/components/Toast";
 import "@/styles/dashboard.css";
+import "@/styles/mobile/dashboard.mobile.css";
 import { formatCurrency } from "@/utils/formatCurrency";
 
 type Summary = { income: number; expense: number; balance: number };
@@ -80,54 +81,71 @@ export default function DashboardPage() {
   const years = Array.from({ length: 21 }, (_, i) => 2020 + i);
 
   // Carregar contas
-  const fetchAccounts = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) return router.push("/login");
+ const fetchAccounts = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) return router.push("/login");
 
-      const res = await fetch("/api/accounts", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+    const res = await fetch("/api/accounts", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-      const data = await res.json();
-      setAccounts(data);
-    } catch {
-      setToastMessage("❌ Falha ao carregar contas");
+    // 🔥 Se o token expirou, faz logout automático
+    if (res.status === 401) {
+      localStorage.removeItem("token");
+      router.push("/login");
+      return;
     }
-  };
+
+    const data = await res.json();
+    setAccounts(data);
+
+  } catch {
+    setToastMessage("❌ Falha ao carregar contas");
+  }
+};
+
 
   // Buscar dados do dashboard
-  const fetchDashboardData = async () => {
-    setLoading(true);
-    setError("");
+ const fetchDashboardData = async () => {
+  setLoading(true);
+  setError("");
 
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) return router.push("/login");
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) return router.push("/login");
 
-      const res = await fetch(
-        `/api/dashboard?period=${period}&month=${month}&year=${year}${
-          accountId ? `&accountId=${accountId}` : ""
-        }`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+    const res = await fetch(
+      `/api/dashboard?period=${period}&month=${month}&year=${year}${
+        accountId ? `&accountId=${accountId}` : ""
+      }`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
-      if (!res.ok) throw new Error("Erro ao buscar dados do dashboard");
-
-      const data: DashboardResponse = await res.json();
-      setSummary(data.summary);
-      setMonthlyData(data.monthlyData);
-      setPieData(data.pieData);
-      setCategoryExpenses(data.categoryExpenses);
-
-      setToastMessage("✅ Dashboard atualizado com sucesso!");
-    } catch (err: any) {
-      setError(err.message);
-      setToastMessage("❌ Erro ao atualizar dashboard");
-    } finally {
-      setLoading(false);
+    // 🔥 Se o token expirou, desloga
+    if (res.status === 401) {
+      localStorage.removeItem("token");
+      router.push("/login");
+      return;
     }
-  };
+
+    if (!res.ok) throw new Error("Erro ao buscar dados do dashboard");
+
+    const data: DashboardResponse = await res.json();
+    setSummary(data.summary);
+    setMonthlyData(data.monthlyData);
+    setPieData(data.pieData);
+    setCategoryExpenses(data.categoryExpenses);
+
+    setToastMessage("✅ Dashboard atualizado com sucesso!");
+  } catch (err: any) {
+    setError(err.message);
+    setToastMessage("❌ Erro ao atualizar dashboard");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => {
     fetchAccounts();

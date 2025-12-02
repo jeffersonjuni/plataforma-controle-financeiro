@@ -39,8 +39,7 @@
   border: 1px solid #ccc;
 }
 
-/* ---------- SENHA + BOTÃO MOSTRAR ---------- */
-
+/* SENHA + BOTÃO MOSTRAR */
 .password-wrapper {
   position: relative;
   display: flex;
@@ -50,7 +49,7 @@
 
 .password-wrapper input {
   width: 100%;
-  padding-right: 56px; /* Espaço ideal para o botão */
+  padding-right: 56px;
   margin-bottom: 0;
 }
 
@@ -95,8 +94,7 @@
   font-weight: 600;
 }
 
-/* ---------- BOTÃO PRINCIPAL ---------- */
-
+/* BOTÃO PRINCIPAL */
 .register-form .submit-btn {
   background: var(--color-accent);
   color: white;
@@ -134,63 +132,4 @@
   margin-top: 0.75rem;
   cursor: pointer;
   font-size: 0.95rem;
-}
-
-/* ---------- RESPONSIVIDADE ---------- */
-
-@media (max-width: 768px) {
-  .register-container {
-    padding: 1.5rem;
-  }
-
-  .register-form {
-    padding: 1.5rem;
-    max-width: 320px;
-  }
-
-  .register-form input,
-  .register-form .submit-btn {
-    font-size: 0.95rem;
-    padding: 0.7rem;
-  }
-
-  .show-password-btn {
-    font-size: 0.72rem;
-    padding: 3px 6px;
-  }
-}
-
-@media (max-width: 480px) {
-  .register-container {
-    justify-content: flex-start;
-    padding-top: 4rem;
-  }
-
-  .register-form {
-    padding: 1.2rem;
-    width: 100%;
-    max-width: 100%;
-    border-radius: 8px;
-    box-shadow: none;
-  }
-
-  .register-form input,
-  .register-form .submit-btn {
-    font-size: 0.9rem;
-    padding: 0.65rem;
-  }
-
-  .show-password-btn {
-    font-size: 0.7rem;
-    padding: 3px 6px;
-  }
-
-  .error,
-  .success {
-    font-size: 0.9rem;
-  }
-
-  .password-tips {
-    font-size: 0.8rem;
-  }
 }

@@ -30,7 +30,6 @@
   border: 1px solid #ccc;
 }
 
-
 /* Wrapper do input de senha + botão */
 .password-wrapper {
   position: relative;
@@ -66,9 +65,9 @@
   background: #d1d5db;
 }
 
-/* 🔘 Botão de enviar igual ao da tela de cadastro */
+/* Botão de enviar */
 .submit-btn {
-  background: var(--color-accent); /* verde do sistema */
+  background: var(--color-accent);
   color: white;
   font-weight: bold;
   padding: 0.75rem;
@@ -79,60 +78,11 @@
 }
 
 .submit-btn:hover {
-  background: #15803d; /* verde mais escuro */
+  background: #15803d;
 }
-
 
 .error {
   margin-top: 1rem;
   color: var(--color-danger);
   font-weight: 500;
-}
-
-/* Responsividade aprimorada */
-@media (max-width: 768px) {
-  .login-container {
-    padding: 1.5rem;
-  }
-
-  .login-form {
-    padding: 1.5rem;
-    max-width: 320px;
-  }
-
-  .login-form input,
-  .login-form button {
-    font-size: 0.95rem;
-    padding: 0.7rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .login-container {
-    justify-content: flex-start;
-    padding-top: 4rem;
-  }
-
-  .login-form {
-    padding: 1.2rem;
-    width: 100%;
-    max-width: 100%;
-    border-radius: 8px;
-    box-shadow: none;
-  }
-
-  .login-form input,
-  .login-form button {
-    font-size: 0.9rem;
-    padding: 0.65rem;
-  }
-
-  .login-form button {
-    width: 100%;
-  }
-
-  .error {
-    font-size: 0.9rem;
-    text-align: center;
-  }
 }

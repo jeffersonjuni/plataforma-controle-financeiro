@@ -9,7 +9,7 @@
   transition: background 0.3s, color 0.3s;
   position: sticky;
   top: 0;
-  z-index: 950; /* levemente menor que o botão do menu (1000) */
+  z-index: 950;
 }
 
 /* LOGO */
@@ -37,62 +37,4 @@
 
 .navbar-actions button:hover {
   background: var(--color-secondary);
-}
-
-/* 📱 RESPONSIVO MÉDIO */
-@media (max-width: 1024px) {
-  .navbar {
-    padding: 1rem 1.5rem;
-  }
-}
-
-/* TABLET */
-@media (max-width: 768px) {
-  .navbar {
-    justify-content: flex-start;
-    gap: 1rem;
-    padding: 0.8rem 1.2rem 0.8rem 3.5rem; /* espaço extra p/ botão menu */
-  }
-
-  .navbar-logo {
-    font-size: 1.1rem;
-  }
-
-  .navbar-actions {
-    margin-left: auto;
-    gap: 0.6rem;
-  }
-
-  .navbar-actions button {
-    padding: 0.4rem 0.7rem;
-    font-size: 0.9rem;
-  }
-}
-
-/* MOBILE */
-@media (max-width: 480px) {
-  .navbar {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.8rem 1rem 0.8rem 3.2rem; /* recuo ajustado p/ ícone menu */
-    gap: 0;
-  }
-
-  .navbar-logo {
-    font-size: 1rem;
-    text-align: left;
-  }
-
-  .navbar-actions {
-    justify-content: flex-end;
-    flex-wrap: nowrap;
-    gap: 0.5rem;
-  }
-
-  .navbar-actions button {
-    flex: none;
-    padding: 0.5rem 0.7rem;
-    font-size: 0.85rem;
-  }
 }

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import AppWrapper from "@/components/AppWrapper";
 import Toast from "@/components/Toast";
 import "@/styles/configuracoes.css";
+import "@/styles/mobile/configuracoes.mobile.css";
 
 export default function ConfiguracoesPage() {
   const router = useRouter();

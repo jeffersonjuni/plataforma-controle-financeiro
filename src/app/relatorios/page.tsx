@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import AppWrapper from "@/components/AppWrapper";
 import Toast from "@/components/Toast";
 import "@/styles/relatorios.css";
+import "@/styles/mobile/relatorios.mobile.css";
 
 interface Account {
   id: number;

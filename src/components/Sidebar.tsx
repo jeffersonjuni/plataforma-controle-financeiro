@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import "../styles/sidebar.css";
 
+
+
 export default function Sidebar({ onLogout }: { onLogout: () => void }) {
   const [username, setUsername] = useState("");
   const [isOpen, setIsOpen] = useState(false); 

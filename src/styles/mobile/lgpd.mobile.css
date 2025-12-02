@@ -1,0 +1,44 @@
+/* ===== Tablets Médios (até 1024px) ===== */
+@media (max-width: 1024px) {
+  .lgpd-alert {
+    left: 10px;
+    right: 10px;
+    bottom: 15px;
+    padding: 0.9rem 1.2rem;
+  }
+}
+
+/* ===== Celulares Grandes e Médios (até 768px) ===== */
+@media (max-width: 768px) {
+  .lgpd-alert {
+    left: 8px;
+    right: 8px;
+    bottom: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.9rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .lgpd-alert button {
+    width: 100%;
+    text-align: center;
+    padding: 0.5rem;
+  }
+}
+
+/* ===== Celulares Pequenos (até 480px) ===== */
+@media (max-width: 480px) {
+  .lgpd-alert {
+    left: 5px;
+    right: 5px;
+    bottom: 8px;
+    padding: 0.8rem 0.9rem;
+    font-size: 0.85rem;
+  }
+
+  .lgpd-alert button {
+    font-size: 0.85rem;
+  }
+}

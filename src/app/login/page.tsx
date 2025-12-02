@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import "@/styles/login.css";
+import "@/styles/mobile/login.mobile.css";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {

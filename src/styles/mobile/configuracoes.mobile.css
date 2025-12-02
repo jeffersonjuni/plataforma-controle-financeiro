@@ -1,0 +1,160 @@
+/* =============================
+   CONFIGURAÇÕES — RESPONSIVO
+============================= */
+
+/* === Telas grandes (até 1400px) === */
+@media (max-width: 1400px) {
+  .config-container {
+    padding: 2.5rem 3rem;
+  }
+
+  .config-header h2 {
+    font-size: 2.2rem;
+  }
+}
+
+/* === Laptops e tablets grandes (até 1024px) === */
+@media (max-width: 1024px) {
+  .config-container {
+    padding: 2rem 2.5rem;
+  }
+
+  .config-sections {
+    grid-template-columns: 1fr;
+  }
+
+  .config-card {
+    padding: 2rem;
+  }
+
+  .config-header h2 {
+    font-size: 2rem;
+  }
+}
+
+/* === Tablets e celulares grandes (até 768px) === */
+@media (max-width: 768px) {
+  .config-container {
+    padding: 1.5rem;
+    gap: 2rem;
+  }
+
+  .config-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .config-header h2 {
+    font-size: 1.8rem;
+    text-align: left;
+  }
+
+  .config-card {
+    padding: 1.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .config-card h3 {
+    font-size: 1.4rem;
+  }
+
+  .config-actions {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .back-btn,
+  .save-btn,
+  .discard-btn {
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  select {
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .category-item {
+    font-size: 0.9rem;
+  }
+
+  .config-card input,
+  .config-card select,
+  .config-card textarea {
+    max-width: 90%;
+  }
+
+  .add-category {
+    justify-content: center;
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .add-category input {
+    max-width: 90%;
+  }
+}
+
+/* === Celulares pequenos (até 480px) === */
+@media (max-width: 480px) {
+  .config-container {
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+
+  .config-header h2 {
+    font-size: 1.6rem;
+    text-align: center;
+    width: 100%;
+  }
+
+  .config-card {
+    padding: 1.4rem;
+    align-items: center;
+  }
+
+  .config-card h3 {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .add-category {
+    align-items: center;
+    width: 100%;
+  }
+
+  .add-category input {
+    width: 100%;
+    max-width: 95%;
+  }
+
+  .category-item {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.9rem;
+  }
+
+  .config-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .config-actions button {
+    width: 90%;
+  }
+
+  .config-card input,
+  .config-card select,
+  .config-card textarea {
+    width: 100%;
+    max-width: 95%;
+  }
+}
