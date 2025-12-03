@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `Transaction` ADD COLUMN `category` ENUM('FIXA', 'VARIAVEL') NOT NULL DEFAULT 'VARIAVEL';
