@@ -19,7 +19,9 @@ export async function POST(req: NextRequest) {
     await registerLimiter.consume(ip);
   } catch {
     return NextResponse.json(
-      { error: "Muitas solicitações de cadastro. Tente novamente em 1 minuto." },
+      {
+        error: "Muitas solicitações de cadastro. Tente novamente em 1 minuto.",
+      },
       { status: 429 }
     );
   }
@@ -46,8 +48,7 @@ export async function POST(req: NextRequest) {
     }
 
     // ⚠ Validação de senha forte
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&()_\-])[A-Za-z\d@$!%*#?&()_\-]{8,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
     if (!passwordRegex.test(password)) {
       return NextResponse.json(
