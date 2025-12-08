@@ -22,6 +22,16 @@
   box-sizing: border-box;
 }
 
+#tittle-login {
+  text-align: center;
+  width: 100%;
+}
+
+#forgot-password-tittle {
+  text-align: center;
+  width: 100%;
+}
+
 .login-form input {
   margin-bottom: 1rem;
   padding: 0.75rem;
@@ -40,7 +50,7 @@
 
 .password-wrapper input {
   width: 100%;
-  padding-right: 52px;
+  padding-right: 56px;
   margin-bottom: 0;
 }
 
@@ -50,19 +60,21 @@
   right: 8px;
   top: 50%;
   transform: translateY(-50%);
-  background: #e5e7eb;
-  border: none;
-  padding: 6px 10px;
-  font-size: 0.85rem;
-  border-radius: 6px;
+  background: #f3f4f6;
+  border: 1px solid #ccc;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  border-radius: 4px;
   cursor: pointer;
-  color: #111;
-  transition: background 0.2s;
+  color: #333;
+  transition: background 0.15s, border-color 0.15s;
   white-space: nowrap;
+  z-index: 2;
 }
 
 .show-password-btn:hover {
-  background: #d1d5db;
+  background: #e5e7eb;
+  border-color: #bbb;
 }
 
 /* Botão de enviar */

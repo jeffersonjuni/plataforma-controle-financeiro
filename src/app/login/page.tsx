@@ -55,7 +55,7 @@ export default function LoginPage() {
           handleLogin();
         }}
       >
-        <h2>Controle Financeiro</h2>
+        <h2 id="tittle-login">Controle Financeiro</h2>
 
         <input
           type="email"
@@ -78,6 +78,7 @@ export default function LoginPage() {
           <button
             type="button"
             className="show-password-btn"
+            id="login-shadow-mobile"
             onClick={() => setShowPassword(!showPassword)}
           >
             {showPassword ? "👁️ Ocultar" : "👁️ Mostrar"}

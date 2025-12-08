@@ -26,7 +26,7 @@ export default function ForgotPasswordPage() {
           submit();
         }}
       >
-        <h2>Recuperar senha</h2>
+        <h2 id="forgot-password-tittle">Recuperar senha</h2>
 
         <input
           type="email"

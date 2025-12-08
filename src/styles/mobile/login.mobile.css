@@ -14,6 +14,10 @@
     font-size: 0.95rem;
     padding: 0.7rem;
   }
+   .show-password-btn {
+    font-size: 0.72rem;
+    padding: 3px 6px;
+  }
 }
 
 /* ===== Celulares pequenos (até 480px) ===== */
@@ -37,12 +41,17 @@
     padding: 0.65rem;
   }
 
-  .login-form button {
-    width: 100%;
+  .show-password-btn, #login-shadow-mobile {
+    font-size: 0.7rem;
+    padding: 3px 6px;
   }
 
   .error {
     font-size: 0.9rem;
     text-align: center;
   }
+
+ 
 }
+
+
