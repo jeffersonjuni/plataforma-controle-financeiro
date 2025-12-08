@@ -25,13 +25,12 @@ export default function AccountsPage() {
   const [error, setError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState("");
 
-  const [formErrors, setFormErrors] = useState<{ name?: string; balance?: string }>({});
+  const [formErrors, setFormErrors] = useState<{ name?: string }>({});
   const [editingId, setEditingId] = useState<number | null>(null);
 
   const [form, setForm] = useState({
     name: "",
     type: "CORRENTE",
-    balance: "",
   });
 
   /* =============================
@@ -70,13 +69,9 @@ export default function AccountsPage() {
            VALIDAÇÃO
   ============================== */
   const validateForm = () => {
-    const errors: { name?: string; balance?: string } = {};
+    const errors: { name?: string } = {};
 
     if (!form.name.trim()) errors.name = "O nome da conta não pode estar vazio.";
-
-    const balanceNum = Number(form.balance);
-    if (isNaN(balanceNum) || balanceNum < 0)
-      errors.balance = "Informe um saldo válido (≥ 0).";
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -104,17 +99,15 @@ export default function AccountsPage() {
         body: JSON.stringify({
           name: form.name,
           type: form.type.toUpperCase(),
-          balance: Number(form.balance),
         }),
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Erro ao criar conta");
 
-      setForm({ name: "", type: "CORRENTE", balance: "" });
+      setForm({ name: "", type: "CORRENTE" });
       setFormErrors({});
       setToastMessage("✅ Conta criada com sucesso!");
-
       fetchAccounts();
     } catch (err: any) {
       setError(err.message);
@@ -129,8 +122,7 @@ export default function AccountsPage() {
     setEditingId(acc.id);
     setForm({
       name: acc.name,
-      type: acc.type,
-      balance: String(acc.balance),
+      type: acc.type.toUpperCase(), // CORREÇÃO APLICADA
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -153,8 +145,7 @@ export default function AccountsPage() {
         },
         body: JSON.stringify({
           name: form.name,
-          type: form.type,
-          balance: Number(form.balance),
+          type: form.type.toUpperCase(), // CORREÇÃO APLICADA
         }),
       });
 
@@ -163,7 +154,7 @@ export default function AccountsPage() {
 
       setToastMessage("✅ Conta atualizada com sucesso!");
       setEditingId(null);
-      setForm({ name: "", type: "CORRENTE", balance: "" });
+      setForm({ name: "", type: "CORRENTE" });
       fetchAccounts();
     } catch (err: any) {
       setToastMessage("❌ Não foi possível atualizar a conta.");
@@ -231,17 +222,6 @@ export default function AccountsPage() {
             <option value="INVESTIMENTO">Investimento</option>
           </select>
 
-          <div className="form-group">
-            <input
-              type="number"
-              placeholder="Saldo inicial (R$)"
-              value={form.balance}
-              onChange={(e) => setForm({ ...form, balance: e.target.value })}
-              className={formErrors.balance ? "input-error" : ""}
-            />
-            {formErrors.balance && <small className="error-msg">{formErrors.balance}</small>}
-          </div>
-
           {editingId ? (
             <button type="button" onClick={handleUpdate}>
               Salvar Alterações
@@ -274,17 +254,11 @@ export default function AccountsPage() {
                   <td>{formatCurrency(a.balance)}</td>
                   <td>{new Date(a.createdAt).toLocaleDateString("pt-BR")}</td>
                   <td style={{ display: "flex", gap: "0.5rem" }}>
-                    <button
-                      className="edit-btn"
-                      onClick={() => startEditing(a)}
-                    >
+                    <button className="edit-btn" onClick={() => startEditing(a)}>
                       Editar
                     </button>
 
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDelete(a.id)}
-                    >
+                    <button className="delete-btn" onClick={() => handleDelete(a.id)}>
                       Excluir
                     </button>
                   </td>

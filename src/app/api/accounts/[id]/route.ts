@@ -2,8 +2,15 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getUserFromToken } from "@/lib/authService";
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+// PATCH — atualizar conta
+export async function PATCH(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await context.params; // ← NECESSÁRIO
+    const accountId = Number(id);
+
     const token = req.headers.get("authorization")?.split(" ")[1];
     if (!token)
       return NextResponse.json({ error: "Token ausente" }, { status: 401 });
@@ -12,8 +19,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     if (!user)
       return NextResponse.json({ error: "Usuário inválido" }, { status: 401 });
 
-    const accountId = Number(params.id);
-    const { name, balance, type } = await req.json();
+    const { name, type } = await req.json();
 
     const account = await prisma.account.findUnique({
       where: { id: accountId },
@@ -28,7 +34,6 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
     const data: any = {};
     if (name) data.name = name;
-    if (balance !== undefined) data.balance = balance;
 
     if (type) {
       const t = type.toUpperCase();
@@ -49,8 +54,15 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+// DELETE — excluir conta
+export async function DELETE(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await context.params; // ← NECESSÁRIO
+    const accountId = Number(id);
+
     const token = req.headers.get("authorization")?.split(" ")[1];
     if (!token)
       return NextResponse.json({ error: "Token ausente" }, { status: 401 });
@@ -58,8 +70,6 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
     const user = await getUserFromToken(token);
     if (!user)
       return NextResponse.json({ error: "Usuário inválido" }, { status: 401 });
-
-    const accountId = Number(params.id);
 
     const account = await prisma.account.findUnique({
       where: { id: accountId },
@@ -72,9 +82,10 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
       );
     }
 
-    // Deleta transações primeiro (caso seu schema não use cascade)
+    // Remover transações vinculadas
     await prisma.transaction.deleteMany({ where: { accountId } });
 
+    // Remover conta
     await prisma.account.delete({
       where: { id: accountId },
     });

@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 
     const { name, balance, type } = await req.json();
 
-    if (!name || balance === undefined || !type) {
+    if (!name || !type) {
       return NextResponse.json(
         { error: "Campos obrigatórios faltando" },
         { status: 400 }
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     const newAccount = await prisma.account.create({
       data: {
         name,
-        balance,
+        balance: 0,
         type: accountType,
         userId: user.id,
       },
