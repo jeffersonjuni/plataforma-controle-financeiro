@@ -243,7 +243,7 @@ export default function AccountsPage() {
                 <th>Tipo</th>
                 <th>Saldo</th>
                 <th>Criada em</th>
-                <th>Ações</th>
+                <th className="actions">Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -253,7 +253,7 @@ export default function AccountsPage() {
                   <td>{a.type}</td>
                   <td>{formatCurrency(a.balance)}</td>
                   <td>{new Date(a.createdAt).toLocaleDateString("pt-BR")}</td>
-                  <td style={{ display: "flex", gap: "0.5rem" }}>
+                  <td className="actions">
                     <button className="edit-btn" onClick={() => startEditing(a)}>
                       Editar
                     </button>
