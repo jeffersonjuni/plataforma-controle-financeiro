@@ -1,75 +1,155 @@
 /* ============================
-   ACCOUNT – ESTILOS MOBILE
+   ACCOUNTS — RESPONSIVO MOBILE
+   PADRÃO UNIFICADO DO PROJETO
 ============================ */
 
-/* ---- TABLET ---- */
+/* ===== Tablets Médios (≤ 1024px) ===== */
 @media (max-width: 1024px) {
   .accounts-container {
     padding: 1.5rem;
-    gap: 1rem;
-  }
-}
-
-/* ---- MOBILE (até 768px) ---- */
-@media (max-width: 768px) {
-  .accounts-container {
-    padding: 1rem;
-    border-radius: 8px;
+    gap: 1.2rem;
   }
 
   .accounts-header {
-    font-size: 1.4rem;
-    text-align: center;
+    font-size: 1.5rem;
+  }
+}
+
+/* ===== Tablets e Celulares Grandes (≤ 768px) ===== */
+@media (max-width: 768px) {
+
+  /* Container Geral */
+  .accounts-container {
+    padding: 1rem;
+    gap: 1.2rem;
   }
 
+  .accounts-header {
+    text-align: center;
+    font-size: 1.4rem;
+  }
+
+  /* Formulário Ajustado */
   .account-form {
+    display: flex;
     flex-direction: column;
-    gap: 0.6rem;
-    padding: 0.8rem;
+    gap: 0.8rem;
+    padding: 1rem;
+    width: 88%;
+    max-width: 450px;
+    margin: 0 auto;
   }
 
   .account-form input,
   .account-form select,
   .account-form button {
     width: 100%;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    padding: 0.65rem 0.9rem;
+  }
+
+  /* Tabela de contas */
+  .accounts-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .accounts-table {
-    display: block;
     width: 100%;
-    overflow-x: auto;
-    border-radius: 6px;
+    min-width: 450px; /* EVITA QUEBRAR O LAYOUT */
+    border-radius: 8px;
   }
 
   .accounts-table th,
   .accounts-table td {
-    font-size: 0.85rem;
-    padding: 0.6rem;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
     white-space: nowrap;
   }
 
-  .delete-btn {
-    padding: 0.35rem 0.7rem;
-    font-size: 0.85rem;
+  .delete-btn,
+  .edit-btn {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.7rem;
   }
 }
 
-/* ---- MOBILE PEQUENO (até 480px) ---- */
+/* ===== Celulares Médios e Pequenos (≤ 480px) ===== */
 @media (max-width: 480px) {
+
   .accounts-container {
     padding: 0.8rem;
+    gap: 0.9rem;
   }
 
   .accounts-header {
     font-size: 1.2rem;
+    text-align: center;
   }
 
   .account-form {
-    gap: 0.5rem;
+    padding: 0.7rem;
+    gap: 0.6rem;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .account-form input,
+  .account-form select {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.65rem;
   }
 
   .account-form button {
-    padding: 0.5rem 1rem;
+    padding: 0.55rem;
+    font-size: 0.9rem;
+  }
+
+  /* 📌 Tabela super compacta para caber em telas pequenas */
+  .accounts-table th,
+  .accounts-table td {
+    font-size: 0.55rem;
+    padding: 0.2rem 0.1rem;
+    white-space: nowrap;
+  }
+
+  .delete-btn,
+  .edit-btn {
+    padding: 0.22rem 0.45rem;
+    font-size: 0.45rem;
+    border-radius: 4px;
+  }
+}
+
+/* ================================================
+   📱📱 ULTRA MOBILE (≤ 360px)
+================================================= */
+@media (max-width: 360px) {
+
+  .accounts-header {
+    font-size: 1.05rem;
+  }
+
+  .account-form input,
+  .account-form select {
+    font-size: 0.75rem;
+    padding: 0.45rem 0.6rem;
+  }
+
+  .account-form button {
+    font-size: 0.8rem;
+    padding: 0.5rem;
+  }
+
+  /* Evita quebra total da tabela em telas minúsculas */
+  .accounts-table {
+    min-width: 380px;
+  }
+
+  .accounts-table th,
+  .accounts-table td {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.1rem;
   }
 }

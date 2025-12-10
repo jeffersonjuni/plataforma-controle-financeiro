@@ -1,33 +1,44 @@
 /* ===== Tablets Médios (até 1024px) ===== */
 @media (max-width: 1024px) {
   .footer {
-    padding: 1rem 0.8rem;
-    font-size: 0.85rem;
+    padding: 1rem 1rem;
+    font-size: 0.9rem;
+    text-align: center;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
   }
 }
 
 /* ===== Celulares Grandes e Médios (até 768px) ===== */
 @media (max-width: 768px) {
   .footer {
-    font-size: 0.8rem;
-    padding: 0.9rem 0.6rem;
-    line-height: 1.4;
+    padding: 1rem 0.8rem;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    gap: 6px;
   }
 
   .footer p {
     margin: 0;
+    text-align: center;
+    max-width: 95%;
   }
 }
 
 /* ===== Celulares Pequenos (até 480px) ===== */
 @media (max-width: 480px) {
   .footer {
-    font-size: 0.75rem;
-    padding: 0.8rem 0.4rem;
+    padding: 0.9rem 0.6rem;
+    font-size: 0.8rem;
+    line-height: 1.4;
   }
 
   .footer p {
     white-space: normal;
     word-wrap: break-word;
+    text-align: center;
   }
 }

@@ -213,8 +213,8 @@
 }
 
 /* Botões */
-.edit-btn,
-.delete-btn {
+.edit-btn-transaction,
+.delete-btn-transaction {
   border: none;
   background: none;
   cursor: pointer;
@@ -222,12 +222,12 @@
   transition: transform 0.2s ease;
 }
 
-.edit-btn:hover {
+.edit-btn-transaction:hover {
   color: #007bff;
   transform: scale(1.1);
 }
 
-.delete-btn:hover {
+.delete-btn-transaction:hover {
   color: #e63946;
   transform: scale(1.1);
 }

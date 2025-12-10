@@ -10,7 +10,7 @@
   .navbar {
     justify-content: flex-start;
     gap: 1rem;
-    padding: 0.8rem 1.2rem 0.8rem 3.5rem;
+    padding: 0.8rem 1.2rem 0.8rem 3.2rem; /* alinhamento com o ícone menu */
   }
 
   .navbar-logo {
@@ -20,11 +20,14 @@
   .navbar-actions {
     margin-left: auto;
     gap: 0.6rem;
+    display: flex;
+    align-items: center;
   }
 
   .navbar-actions button {
-    padding: 0.4rem 0.7rem;
+    padding: 0.45rem 0.75rem;
     font-size: 0.9rem;
+    border-radius: 6px;
   }
 }
 
@@ -34,24 +37,26 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 0.8rem 1rem 0.8rem 3.2rem;
+    padding: 0.75rem 1rem 0.75rem 3rem; /* deixou mais proporcional ao menu toggle */
     gap: 0;
   }
 
   .navbar-logo {
     font-size: 1rem;
-    text-align: left;
+    white-space: nowrap; /* evita quebra feia */
   }
 
   .navbar-actions {
-    justify-content: flex-end;
+    display: flex;
+    gap: 0.45rem;
+    align-items: center;
     flex-wrap: nowrap;
-    gap: 0.5rem;
   }
 
   .navbar-actions button {
     flex: none;
-    padding: 0.5rem 0.7rem;
-    font-size: 0.85rem;
+    padding: 0.45rem 0.65rem;
+    font-size: 0.82rem;
+    border-radius: 6px;
   }
 }

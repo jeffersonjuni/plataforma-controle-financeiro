@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import AppWrapper from "@/components/AppWrapper";
 import Toast from "@/components/Toast";
 import "@/styles/transactions.css";
+import "@/styles/mobile/transactions.mobile.css";
 
 type Account = {
   id: number;
@@ -424,12 +425,12 @@ export default function TransactionsPage() {
                   </td>
                   <td>{new Date(t.date).toLocaleDateString("pt-BR")}</td>
                   <td className="actions">
-                    <button onClick={() => handleEdit(t)} className="edit-btn">
+                    <button onClick={() => handleEdit(t)} className="edit-btn-transaction">
                       Editar
                     </button>
                     <button
                       onClick={() => handleDelete(t.id, t.accountId)}
-                      className="delete-btn"
+                      className="delete-btn-transaction"
                     >
                       Excluir
                     </button>
