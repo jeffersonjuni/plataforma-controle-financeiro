@@ -249,7 +249,9 @@ cd plataforma-controle-financeiro
 npm install
 
 Criar .env baseado no .env.example
+Preencha todas as variáveis conforme seu ambiente
 Rodar Prisma
+Nunca suba o arquivo `.env` para o GitHub
 
 npx prisma generate
 npx prisma migrate dev
