@@ -252,6 +252,7 @@ Criar .env baseado no .env.example
 Preencha todas as variáveis conforme seu ambiente
 Rodar Prisma
 Nunca suba o arquivo `.env` para o GitHub
+O projeto foi inicialmente desenvolvido com MySQL em ambiente Docker e posteriormente migrado para PostgreSQL (Supabase), refletindo um cenário real de evolução de arquitetura
 
 npx prisma generate
 npx prisma migrate dev
