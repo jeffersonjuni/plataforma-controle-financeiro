@@ -194,28 +194,6 @@ Docker + MySQL/PostgreSQL (desenvolvimento local)
 <img width="1550" height="788" alt="imagem_2025-12-10_182014378" src="https://github.com/user-attachments/assets/731490ee-e835-4f8e-a614-0695318a80cf" />
 <br/>
 
-<h2>Estrutura Simplificada do Código</h2>
-
-src/
-├── app/
-│ ├── login/
-│ ├── dashboard/
-│ ├── accounts/
-│ ├── transactions/
-│ └── api/
-│ ├── auth/
-│ ├── accounts/
-│ └── transactions/
-│
-├── components/
-├── hooks/
-├── lib/
-│ ├── prisma.ts
-│ └── authService.ts
-└── styles/
-
-<br/>
-
 <h2>Destaques Técnicos</h2>
 
 <h3>Prisma + PostgreSQL</h3>
